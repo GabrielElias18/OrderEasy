@@ -34,6 +34,13 @@ function ProductoInfo({ producto, onClose, onDelete, onUpdate }) {
         await deleteProduct(producto.productoid, token);
         onDelete(producto.productoid); // Llama a onDelete para actualizar la lista de productos
         onClose(); // Cierra el modal
+        
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Eliminado!',
+          text: 'El producto ha sido eliminado correctamente.',
+        });
+        
         window.location.reload(); // Recarga la página
       } catch (error) {
         console.error('Error al eliminar el producto:', error);

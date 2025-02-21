@@ -110,8 +110,10 @@ const updateProduct = async (req, res) => {
       return res.status(404).json({ mensaje: 'Producto no encontrado o no pertenece al usuario.' });
     }
 
-    // Si se suben nuevas imágenes, actualizarlas
-    const nuevasImagenes = req.files ? req.files.map(file => `/uploads/${file.filename}`) : producto.imagenes;
+    // Manejo de imágenes: si se suben nuevas, reemplazar; si no, conservar las existentes
+    const nuevasImagenes = req.files && req.files.length > 0 
+      ? req.files.map(file => `/uploads/${file.filename}`) 
+      : producto.imagenes || []; 
 
     // Actualizar los campos del producto
     await producto.update({
@@ -121,7 +123,7 @@ const updateProduct = async (req, res) => {
       precioCompra: precioCompra !== undefined ? precioCompra : producto.precioCompra,
       precioVenta: precioVenta !== undefined ? precioVenta : producto.precioVenta,
       categoriaid: categoriaid || producto.categoriaid,
-      imagenes: nuevasImagenes
+      imagenes: nuevasImagenes // Asegurar que no se borren imágenes existentes
     });
 
     res.status(200).json({
@@ -133,6 +135,7 @@ const updateProduct = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al actualizar el producto.', error: error.message });
   }
 };
+
 
 // Eliminar un producto
 const deleteProduct = async (req, res) => {
