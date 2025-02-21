@@ -1,0 +1,106 @@
+/* Sidebar Container */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background-color: #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e5e7eb;
+    position: fixed;
+    left: 0;
+    top: 0;
+  }
+  
+  /* Logo Section */
+  .logo-container {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .logo-icon {
+    width: 24px;
+    height: 24px;
+    color: #2563eb;
+  }
+  
+  .logo-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2563eb;
+  }
+  
+  /* Menu Section */
+  .menu-container {
+    padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #cacbcc;
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+  }
+  
+  .menu-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: auto;
+    margin-bottom: 1rem;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.75rem;
+    color: #4b5563;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+    font-size: 0.875rem;
+    margin-left: 10px;
+  }
+  
+  .menu-item:hover {
+    background-color: #e5e7eb;
+    color: #2563eb;
+  }
+  
+  .menu-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* Logout Section */
+  .logout-container {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .logout-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.75rem;
+    color: #ef4444;
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  
+  .logout-button:hover {
+    background-color: #fee2e2;
+  }

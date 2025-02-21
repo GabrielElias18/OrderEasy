@@ -1,0 +1,19 @@
+.botones-inventario {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+
+  .categoria-busqueda {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+  }
+  
+  .busqueda {
+    display: flex;
+    gap: 10px;
+  }
+  
+  

@@ -1,0 +1,32 @@
+.tabla-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 20px 0;
+  }
+  
+  .tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tabla-productos th, .tabla-productos td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .tabla-productos th {
+    background-color: #f4f4f4;
+  }
+  
+  .tabla-productos tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .editar-venta {
+    background-color: blue;
+  }
+
+  .eliminar-venta {
+    background-color: red;
+  }

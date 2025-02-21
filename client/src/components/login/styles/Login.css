@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+* {
+  /* margin: 0; */
+  /* padding: 0; */
+  box-sizing: border-box;
+  /* font-family: 'Montserrat', sans-serif; */
+}
+
+.screen-container {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  min-height: calc(100vh - 6rem);
+  background: white;
+  border-radius: 32px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 
+              0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Image Section */
+.image-section {
+  display: none;
+  position: relative;
+  width: 60%;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .image-section {
+    display: block;
+  }
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.9), rgba(30, 64, 175, 0.9));
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+.background-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 3rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.image-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.image-content p {
+  font-size: 1.25rem;
+  max-width: 36rem;
+  line-height: 1.6;
+}
+
+/* Form Section */
+.form-section {
+  width: 100%;
+  background-color: #f8fafc;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .form-section {
+    width: 40%;
+  }
+}
+
+.form-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  color: #2563eb;
+}
+
+.header h1 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.header h2 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.message {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.success {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+form {
+  margin-bottom: 1.5rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+  margin-left: 5px;
+}
+
+.input-group label {
+  display: block;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background-color: white;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input-group input::placeholder {
+  color: #94a3b8;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submit-button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
+.register {
+  text-align: center;
+}
+
+.register-button {
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  color: #2563eb;
+  border: 1px solid #2563eb;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.register-button:hover {
+  background-color: #2563eb;
+  color: white;
+}
+
+.register-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.5);
+}
+
+@media (max-width: 768px) {
+  .screen-container {
+    padding: 1.5rem;
+  }
+  
+  .login-wrapper {
+    min-height: calc(100vh - 3rem);
+    border-radius: 24px;
+  }
+}
+
+.nombres{
+    display: flex;
+}
+
+.apellidos {
+    display: flex;
+}

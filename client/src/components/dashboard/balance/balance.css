@@ -1,0 +1,88 @@
+/* Botones a la derecha */
+.botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.nuevo-ingreso {
+  color: white;
+  background-color: green;
+  border-radius: 25% 10%;
+}
+
+.nuevo-egreso {
+  color: white;
+  background-color: red;
+  border-radius: 25% 10%;
+}
+
+/* Distribuir los h3 en línea horizontal con más margen */
+.balance {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin: 40px auto; /* Aumentamos el margen superior e inferior */
+  padding: 20px 0; /* Mayor separación interna */
+  width: 85%; /* Reduce un poco el ancho para centrar más */
+}
+
+
+
+/* Botones inferiores ocupando todo el ancho */
+.botones-expandibles {
+  display: flex;
+  width: 100%;
+}
+
+.tick {
+  background-color: rgb(236, 236, 236);
+  padding: 20px 6rem;
+  border-radius: 15px;
+
+}
+
+.btn-ingresos,
+.btn-egresos {
+  flex: 1; /* Hace que ambos botones ocupen el mismo espacio */
+  padding: 15px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.15s ease-in-out; /* Transición suave */
+}
+
+.icon-ingreso {
+  color: #138d4c;
+  font-size: 25px;
+}
+
+.icon-egreso {
+  color: #dc3545;
+  font-size: 25px;
+}
+
+.icon-balance {
+  font-size: 25px;
+  color: #138d4c;
+}
+
+/* Estilo normal */
+.btn-ingresos {
+  background-color: green;
+}
+
+.btn-egresos {
+  background-color: red;
+}
+
+/* Efecto hover: color más oscuro */
+.btn-ingresos:hover {
+  background-color: #006400; /* Verde más oscuro */
+}
+
+.btn-egresos:hover {
+  background-color: #8b0000; /* Rojo más oscuro */
+}

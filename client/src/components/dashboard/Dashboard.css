@@ -1,0 +1,18 @@
+/* Layout Container */
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  /* Main Content Area */
+  .main-content {
+    flex: 1;
+    padding: 1rem;
+    margin-left: 220px; /* Mismo ancho que el sidebar */
+    min-height: 100vh;
+    background-color: #ffffff;
+  }
+
+  div {
+    padding: 0;
+  }
