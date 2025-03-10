@@ -38,10 +38,12 @@
 
 .producto-imagen {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto; /* Ajusta la altura automáticamente */
+  max-height: 200px; /* Evita que sean demasiado grandes */
+  object-fit: contain; /* Muestra la imagen completa sin recortarla */
   border-radius: 5px;
 }
+
 
 .producto-nombre {
   font-size: 1.2rem;

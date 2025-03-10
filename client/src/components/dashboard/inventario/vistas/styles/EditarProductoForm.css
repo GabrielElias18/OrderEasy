@@ -1,0 +1,78 @@
+/* EditarProductoForm.css */
+.overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.popup {
+    background-color: white;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.cerrar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.guardar-btn {
+    background-color: green;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.guardar-btn:hover {
+    background-color: darkgreen;
+}
+
+.preview-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.preview-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
