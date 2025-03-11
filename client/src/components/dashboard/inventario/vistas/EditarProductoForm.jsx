@@ -55,7 +55,7 @@ function EditarProductoForm({ producto, onClose, onUpdate }) {
       formData.append("cantidadDisponible", Number(cantidadDisponible));
       formData.append("precioCompra", Number(precioCompra));
       formData.append("precioVenta", Number(precioVenta));
-      formData.append("categoriaid", categoriaid);
+      formData.append("categoriaid", categoriaId);
 
       imagenes.forEach((imagen) => {
         formData.append("imagenes", imagen);
