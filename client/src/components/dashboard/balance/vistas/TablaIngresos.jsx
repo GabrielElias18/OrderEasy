@@ -6,7 +6,7 @@ import { getVentas, deleteVenta, updateVenta } from "../../../../services/ventaS
 const TablaIngresos = ({ actualizarBalance }) => {
   const [ventas, setVentas] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 15;
+  const registrosPorPagina = 50;
   const [editingVenta, setEditingVenta] = useState(null);
 
   useEffect(() => {

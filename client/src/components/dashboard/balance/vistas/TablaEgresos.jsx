@@ -6,7 +6,7 @@ import { getEgresos, deleteEgreso, updateEgreso } from "../../../../services/egr
 const TablaEgresos = ({ actualizarBalance }) => {
   const [egresos, setEgresos] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 15;
+  const registrosPorPagina = 50;
   const [editingEgreso, setEditingEgreso] = useState(null);
 
   useEffect(() => {
