@@ -172,10 +172,7 @@ const TablaIngresos = ({ actualizarBalance }) => {
                 <td>{venta.descripcion}</td>
                 <td>{venta.cantidad}</td>
                 <td>
-                  ${Number(venta.total).toLocaleString("es-CO", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  ${Number(venta.total).toLocaleString("es-CO", {})}
                 </td>
                 <td>
                   <button 

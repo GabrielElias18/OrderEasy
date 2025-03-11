@@ -47,8 +47,11 @@ function Balance({ token }) {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",
       currency: "COP",
+      minimumFractionDigits: 0, // Evita que se muestren decimales
+      maximumFractionDigits: 0, // Fuerza a que no haya decimales
     }).format(valor);
   };
+  
 
   return (
     <div>
@@ -70,17 +73,17 @@ function Balance({ token }) {
         <div className="tick balance-general">
           <MdAttachMoney className="icon-balance" />
           <h3>Balance General</h3>
-          <p>{formatoMoneda(ingresosTotales - egresosTotales)}</p>
+          <b>{formatoMoneda(ingresosTotales - egresosTotales)}</b>
         </div>
         <div className="tick ingresos">
           <IoMdTrendingUp className="icon-ingreso" />
           <h3>Ingresos Totales</h3>
-          <p>{formatoMoneda(ingresosTotales)}</p>
+          <b>{formatoMoneda(ingresosTotales)}</b>
         </div>
         <div className="tick egresos">
           <PiTrendDownBold className="icon-egreso" />
           <h3>Egresos Totales</h3>
-          <p>{formatoMoneda(egresosTotales)}</p>
+          <b>{formatoMoneda(egresosTotales)}</b>
         </div>
       </div>
 

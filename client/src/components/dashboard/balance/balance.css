@@ -1,4 +1,8 @@
 /* Botones a la derecha */
+
+b {
+  font-size: 25px;
+}
 .botones {
   display: flex;
   justify-content: flex-end;
@@ -66,7 +70,7 @@
 
 .icon-balance {
   font-size: 25px;
-  color: #138d4c;
+  color: blue;
 }
 
 /* Estilo normal */
@@ -85,4 +89,16 @@
 
 .btn-egresos:hover {
   background-color: #8b0000; /* Rojo más oscuro */
+}
+
+.balance-general {
+  color: blue;
+}
+
+.ingresos {
+  color: green;
+}
+
+.egresos { 
+  color: red
 }

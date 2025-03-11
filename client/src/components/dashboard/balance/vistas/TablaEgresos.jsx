@@ -172,10 +172,7 @@ const TablaEgresos = ({ actualizarBalance }) => {
                 <td>{egreso.descripcion}</td>
                 <td>{egreso.cantidad}</td>
                 <td>
-                  ${Number(egreso.total).toLocaleString("es-CO", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })}
+                  ${Number(egreso.total).toLocaleString("es-CO", {})}
                 </td>
                 <td>
                   <button 
