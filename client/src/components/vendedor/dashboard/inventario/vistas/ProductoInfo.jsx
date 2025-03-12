@@ -1,11 +1,39 @@
-import React, { useState } from 'react';
-import Swal from 'sweetalert2'; // Importa SweetAlert2
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import './styles/ProductoInfo.css';
-import { deleteProduct } from '../../../../../services/productServices';
+import { deleteProduct, getProductById } from '../../../../../services/productServices';
 import EditarProductoForm from './EditarProductoForm';
 
-function ProductoInfo({ producto, onClose, onDelete, onUpdate }) {
+function ProductoInfo({ id, onClose }) {
+  const [producto, setProducto] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchProducto = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          Swal.fire('Error', 'No se encontró el token de autenticación.', 'error');
+          return;
+        }
+
+        const data = await getProductById(id, token);
+        if (!data) {
+          Swal.fire('Error', 'No se encontró el producto.', 'error');
+          onClose();
+          return;
+        }
+
+        setProducto(data);
+      } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        Swal.fire('Error', 'Hubo un problema al cargar el producto.', 'error');
+        onClose();
+      }
+    };
+
+    fetchProducto();
+  }, [id, onClose]);
 
   const handleDelete = async () => {
     const confirmarEliminar = await Swal.fire({
@@ -17,74 +45,81 @@ function ProductoInfo({ producto, onClose, onDelete, onUpdate }) {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
     });
-  
+
     if (confirmarEliminar.isConfirmed) {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
-          console.error('Token no encontrado');
+          Swal.fire('Error', 'No se encontró el token de autenticación.', 'error');
           return;
         }
-  
-        if (!producto.productoid) {
-          console.error('Producto ID no encontrado');
-          return;
-        }
-  
-        await deleteProduct(producto.productoid, token);
-        onDelete(producto.productoid); // Llama a onDelete para actualizar la lista de productos
-        onClose(); // Cierra el modal
-        
-        await Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: 'El producto ha sido eliminado correctamente.',
-        });
-        
-        window.location.reload(); // Recarga la página
+
+        await deleteProduct(id, token);
+        Swal.fire('Eliminado', 'El producto ha sido eliminado.', 'success');
+        onClose(); // Cerrar el modal después de eliminar
       } catch (error) {
         console.error('Error al eliminar el producto:', error);
+        Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
       }
     }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true); // Mostrar el formulario de edición
+  const handleUpdate = (updatedProduct) => {
+    setProducto(updatedProduct);
+    setIsEditing(false);
+    Swal.fire({
+      title: 'Producto actualizado',
+      text: 'El producto se ha actualizado correctamente.',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      setTimeout(() => {
+        window.location.reload(); // 🔄 Se recarga con un pequeño retraso
+      }, 500);
+    });
   };
 
-  const handleUpdate = (updatedProduct) => {
-    onUpdate(updatedProduct); // Llama a onUpdate para actualizar la lista de productos
-    setIsEditing(false); // Cierra el formulario de edición
-  };
+  if (!producto) return null;
 
   return (
-    <div className="overlay">
-      <div className="popup">
-        <h2>Detalles del Producto</h2>
-        <button className="cerrar" onClick={onClose}>X</button>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>{isEditing ? "Editar Producto" : "Detalles del Producto"}</h2>
+        <button className="detalle-cerrar" onClick={onClose}>X</button>
+
         {isEditing ? (
-          <EditarProductoForm
-            producto={producto}
-            onClose={() => setIsEditing(false)}
-            onUpdate={handleUpdate}
+          <EditarProductoForm 
+            producto={producto} 
+            onClose={() => setIsEditing(false)} 
+            onUpdate={handleUpdate} 
           />
         ) : (
           <>
-            <div className="producto-info">
-              <h3 className="tittle">{producto.nombre}</h3>
+            <div className="detalle-imagen-container">
+              {producto.imagenes?.length > 0 ? (
+                <img
+                  src={producto.imagenes[0].startsWith("http") ? producto.imagenes[0] : `http://localhost:3000/uploads/${producto.imagenes[0]}`}
+                  alt={producto.nombre}
+                  className="detalle-imagen"
+                  onError={(e) => (e.target.src = "/images/default-product.png")}
+                />
+              ) : (
+                <img src="/images/default-product.png" alt="Sin imagen" className="detalle-imagen" />
+              )}
+            </div>
+
+            <div className="detalle-info">
+              <h3 className="detalle-titulo">{producto.nombre}</h3>
               <p><strong>Descripción:</strong> {producto.descripcion}</p>
               <p><strong>Cantidad Disponible:</strong> {producto.cantidadDisponible}</p>
               <p><strong>Precio de Compra:</strong> ${producto.precioCompra}</p>
               <p><strong>Precio de Venta:</strong> ${producto.precioVenta}</p>
               <p><strong>Categoría:</strong> {producto.categoriaNombre}</p>
             </div>
-            <div className="producto-actions">
-              <button className="editar-btn" onClick={handleEdit}>
-                Editar
-              </button>
-              <button className="eliminar-btn" onClick={handleDelete}>
-                Eliminar
-              </button>
+
+            <div className="detalle-acciones">
+              <button className="detalle-editar-btn" onClick={() => setIsEditing(true)}>Editar</button>
+              <button className="detalle-eliminar-btn" onClick={handleDelete}>Eliminar</button>
             </div>
           </>
         )}

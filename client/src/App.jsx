@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/vendedor/dashboard/Dashboard';
@@ -6,17 +5,15 @@ import Inventario from './components/vendedor/dashboard/inventario/Inventario';
 import Balance from './components/vendedor/dashboard/balance/Balance';
 import Estadisticas from './components/vendedor/dashboard/estadisticas/Estadisticas';
 import Login from './components/vendedor/login/Login';
-import ProtectedRoute from './components/ProtectedRoute'; // Importar el componente de protección
-import Home from './components/inicio/landing'
+import ProtectedRoute from './components/ProtectedRoute';
+import Home from './components/inicio/landing';
 import Inicio from './components/vendedor/dashboard/inicio/Inicio';
 import Registro from './components/vendedor/login/Registro';
 
-import DashboardAdmin from './components/administrador/dashboard/DashboardAdmin'
-import Usuarios from './components/administrador/dashboard/usuarios/Usuario'
-import Reportes from './components/administrador/dashboard/reportes/Reportes'
-import Configuracion from './components/administrador/dashboard/configuracion/Configuracion'
-
-
+import DashboardAdmin from './components/administrador/dashboard/DashboardAdmin';
+import Usuarios from './components/administrador/dashboard/usuarios/Usuario';
+import Reportes from './components/administrador/dashboard/reportes/Reportes';
+import Configuracion from './components/administrador/dashboard/configuracion/Configuracion';
 function App() {
   return (
     <BrowserRouter>

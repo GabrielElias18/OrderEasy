@@ -1,35 +1,19 @@
 import React, { useState } from 'react';
+import ProductoInfo from './ProductoInfo';
 import './styles/VisualizarProductos.css';
-import ProductoInfo from './ProductoInfo'; // Importar el componente ProductoInfo
-import { deleteProduct } from '../../../../../services/productServices'; // Importar la función deleteProduct
 
 function VisualizarProductos({ productos }) {
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleProductoClick = (producto) => {
-    setProductoSeleccionado(producto); // Establecer el producto seleccionado
+  const handleProductoClick = (id) => {
+    setSelectedProductId(id);
+    setIsModalOpen(true);
   };
 
-  const handleClosePopup = () => {
-    setProductoSeleccionado(null); // Cerrar el popup
-  };
-
-  const handleDelete = async (productoId) => {
-    const token = localStorage.getItem('token'); // Recupera el token del localStorage
-
-    if (!token) {
-      console.error('Token no encontrado');
-      return;
-    }
-
-    try {
-      // Llamar a la función deleteProduct pasando el id del producto
-      await deleteProduct(productoId, token);
-      // Actualiza la lista de productos después de eliminar el producto
-      setProductoSeleccionado(null); // Cierra el popup después de eliminar el producto
-    } catch (error) {
-      console.error('Error al eliminar el producto:', error);
-    }
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProductId(null);
   };
 
   if (!productos || productos.length === 0) {
@@ -39,7 +23,11 @@ function VisualizarProductos({ productos }) {
   return (
     <div className="productos-container">
       {productos.map((producto) => (
-        <div key={producto.productoid} className="producto-card" onClick={() => handleProductoClick(producto)}>
+        <div 
+          key={producto.productoid} 
+          className="producto-card" 
+          onClick={() => handleProductoClick(producto.productoid)} // Abre el modal al hacer clic
+        >
           <div className="producto-imagen-container">
             {producto.imagenes && producto.imagenes.length > 0 ? (
               <img
@@ -48,7 +36,6 @@ function VisualizarProductos({ productos }) {
                 className="producto-imagen"
                 onError={(e) => (e.target.src = "/images/default-product.png")}
               />
-
             ) : (
               <img
                 src="/images/default-product.png"
@@ -62,13 +49,9 @@ function VisualizarProductos({ productos }) {
         </div>
       ))}
 
-      {/* Mostrar el popup con los detalles del producto si hay un producto seleccionado */}
-      {productoSeleccionado && (
-        <ProductoInfo
-          producto={productoSeleccionado}
-          onClose={handleClosePopup}
-          onDelete={() => handleDelete(productoSeleccionado.productoid)} // Pasar la función handleDelete como prop
-        />
+      {/* Modal nativo */}
+      {isModalOpen && selectedProductId && (
+        <ProductoInfo id={selectedProductId} onClose={closeModal} />
       )}
     </div>
   );
