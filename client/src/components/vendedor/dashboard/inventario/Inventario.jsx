@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { Plus, FolderPlus, Settings } from 'lucide-react';
 import VisualizarProductos from './vistas/VisualizarProductos';
 import CrearCategoriaForm from './vistas/CrearCategoriaForm';
 import CrearProductoForm from './vistas/CrearProductoForm';
@@ -10,7 +10,6 @@ import { getAllProducts } from '../../../../services/productServices';
 import './Inventario.css';
 
 function Inventario() {
-  const navigate = useNavigate();
   const [isCrearCategoriaVisible, setCrearCategoriaVisible] = useState(false);
   const [isCrearProductoVisible, setCrearProductoVisible] = useState(false);
   const [isGestionarCategoriaVisible, setGestionarCategoriaVisible] = useState(false);
@@ -18,6 +17,7 @@ function Inventario() {
   const [productos, setProductos] = useState([]);
   const [selectedCategoria, setSelectedCategoria] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -69,22 +69,76 @@ function Inventario() {
     return coincideCategoria && coincideNombre;
   });
 
-  const handleVerDetalles = (productoId) => {
-    navigate(`/dashboard/inventario/producto/${productoId}`);
+  const handleUpdateProduct = async (updatedProduct) => {
+    try {
+      setProductos((prevProductos) =>
+        prevProductos.map((producto) =>
+          producto._id === updatedProduct._id ? updatedProduct : producto
+        )
+      );
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Producto actualizado!',
+        text: 'El producto se ha actualizado correctamente.',
+      });
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar el producto.',
+      });
+    }
+  };
+
+  const handleDeleteProduct = async (deletedProductId) => {
+    try {
+      setProductos((prevProductos) =>
+        prevProductos.filter((producto) => producto._id !== deletedProductId)
+      );
+      await Swal.fire({
+        icon: 'success',
+        title: '¡Producto eliminado!',
+        text: 'El producto se ha eliminado correctamente.',
+      });
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo eliminar el producto.',
+      });
+    }
   };
 
   return (
-    <div>
-      <div className="botones-inventario">
-        <button onClick={() => setCrearProductoVisible(true)}>Agregar Producto</button>
-        <button onClick={() => setGestionarCategoriaVisible(true)}>Gestionar Categorías</button>
-      </div>
-
-      <div className="categoria-busqueda">
-        <button onClick={() => setCrearCategoriaVisible(true)}>Agregar Categoría</button>
-        <div className="busqueda">
+    <div className="inventario-main">
+      <div className="inventario-top">
+        <div className="inventario-buttons-left">
+          <button 
+            className="inventario-btn inventario-btn-primary"
+            onClick={() => setCrearProductoVisible(true)}
+          >
+            <Plus size={18} />
+            <span>Agregar Producto</span>
+          </button>
+          <button 
+            className="inventario-btn inventario-btn-secondary"
+            onClick={() => setCrearCategoriaVisible(true)}
+          >
+            <FolderPlus size={18} />
+            <span>Agregar Categoría</span>
+          </button>
+        </div>
+        
+        <div className="inventario-filters-right">
+          <button 
+            className="inventario-btn inventario-btn-secondary"
+            onClick={() => setGestionarCategoriaVisible(true)}
+          >
+            <Settings size={18} />
+            <span>Gestionar Categorías</span>
+          </button>
           <select
-            name="categorias"
+            className="inventario-select"
             value={selectedCategoria}
             onChange={(e) => setSelectedCategoria(e.target.value)}
           >
@@ -95,20 +149,35 @@ function Inventario() {
               </option>
             ))}
           </select>
-          <input
-            type="text"
-            placeholder="Buscar Producto"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
         </div>
       </div>
-
-      <VisualizarProductos
-        productos={productosFiltrados}
-        onVerDetalles={handleVerDetalles}
-      />
-
+      
+      <div className="inventario-search-sticky">
+        <input
+          type="text"
+          className="inventario-search-input"
+          placeholder="Buscar Producto"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      
+      <div className="inventario-products">
+        <VisualizarProductos
+          productos={productosFiltrados}
+          onVerDetalles={setProductoSeleccionado}
+        />
+      </div>
+      
+      {productoSeleccionado && (
+        <ProductoInfo
+          producto={productoSeleccionado}
+          onClose={() => setProductoSeleccionado(null)}
+          onDelete={handleDeleteProduct}
+          onUpdate={handleUpdateProduct}
+        />
+      )}
+      
       <CrearCategoriaForm
         isVisible={isCrearCategoriaVisible}
         onClose={() => setCrearCategoriaVisible(false)}
