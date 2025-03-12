@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'; // Importa SweetAlert2
 import './styles/ProductoInfo.css';
-import { deleteProduct } from '../../../../services/productServices';
+import { deleteProduct } from '../../../../../services/productServices';
 import EditarProductoForm from './EditarProductoForm';
 
 function ProductoInfo({ producto, onClose, onDelete, onUpdate }) {

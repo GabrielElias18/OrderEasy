@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { updateProduct } from "../../../../services/productServices";
-import { getCategoriesByUser } from "../../../../services/categoryServices";
+import { updateProduct } from "../../../../../services/productServices";
+import { getCategoriesByUser } from "../../../../../services/categoryServices";
 import './styles/EditarProductoForm.css';
 
 function EditarProductoForm({ producto, onClose, onUpdate }) {

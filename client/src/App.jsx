@@ -1,30 +1,36 @@
 // src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/dashboard/Dashboard';
-import Inventario from './components/dashboard/inventario/Inventario';
-import Balance from './components/dashboard/balance/Balance';
-import Estadisticas from './components/dashboard/estadisticas/Estadisticas';
-import Login from './components/login/Login';
+import Dashboard from './components/vendedor/dashboard/Dashboard';
+import Inventario from './components/vendedor/dashboard/inventario/Inventario';
+import Balance from './components/vendedor/dashboard/balance/Balance';
+import Estadisticas from './components/vendedor/dashboard/estadisticas/Estadisticas';
+import Login from './components/vendedor/login/Login';
 import ProtectedRoute from './components/ProtectedRoute'; // Importar el componente de protección
 import Home from './components/inicio/landing'
-import Inicio from './components/dashboard/inicio/Inicio';
-import Registro from './components/login/Registro';
+import Inicio from './components/vendedor/dashboard/inicio/Inicio';
+import Registro from './components/vendedor/login/Registro';
+
+import DashboardAdmin from './components/administrador/dashboard/DashboardAdmin'
+import Usuarios from './components/administrador/dashboard/usuarios/Usuario'
+import Reportes from './components/administrador/dashboard/reportes/Reportes'
+import Configuracion from './components/administrador/dashboard/configuracion/Configuracion'
+
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Ruta pública: Login */}
+        {/* Rutas públicas */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path='/registro' element={<Registro/>} />
+        <Route path="/registro" element={<Registro />} />
 
-        {/* Ruta privada: Dashboard y sus subrutas */}
+        {/* Rutas protegidas para vendedores */}
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute rolPermitido="vendedor">
               <Dashboard />
             </ProtectedRoute>
           }
@@ -35,8 +41,19 @@ function App() {
           <Route path="estadisticas" element={<Estadisticas />} />
         </Route>
 
-        {/* Ruta de inicio */}
-        <Route path="/" element={<Home />} />
+        {/* Rutas protegidas para administradores */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute rolPermitido="administrador">
+              <DashboardAdmin />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="reportes" element={<Reportes />} />
+          <Route path="configuracion" element={<Configuracion />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

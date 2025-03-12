@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { registerUser } from '../../services/authServices';
+import { registerUser } from '../../../services/authServices';
 import './styles/Registro.css';
 
 function Registro() {

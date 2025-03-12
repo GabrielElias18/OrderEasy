@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Boxes } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/authServices';
+import { loginUser } from '../../../services/authServices';
 import Swal from 'sweetalert2';
-import '../login/styles/Login.css';
+import './styles/Login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -21,7 +21,7 @@ function Login() {
     }
 
     try {
-      // Show loading alert while trying to log in
+      // Mostrar alerta de carga
       Swal.fire({
         title: "Iniciando sesión...",
         text: "Por favor espera un momento",
@@ -33,26 +33,35 @@ function Login() {
 
       const data = await loginUser(username, password);
       
-      // Close loading alert
+      // Cerrar alerta de carga
       Swal.close();
       
-      // Show success alert
+      // Mostrar mensaje de éxito
       Swal.fire({
         icon: "success",
         title: "Inicio de sesión exitoso",
         text: "Bienvenido al panel de control",
       });
 
+      // Guardar token, usuario y rol en localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.usuario));
+      localStorage.setItem('rol', data.usuario.rol); // Guardar rol
+
       setUser(data.usuario);
       setMessage('¡Inicio de sesión exitoso!');
-      navigate('/dashboard/inicio');
+
+      // Redirigir según el rol
+      if (data.usuario.rol === "administrador") {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard/inicio');
+      }
     } catch (error) {
-      // Close loading alert
+      // Cerrar alerta de carga
       Swal.close();
       
-      // Show error alert
+      // Mostrar alerta de error
       Swal.fire({
         icon: "error",
         title: "Error de inicio de sesión",
@@ -68,7 +77,7 @@ function Login() {
   return (
     <div className="screen-container">
       <div className="login-wrapper">
-        {/* Left side - Image Section (60%) */}
+        {/* Sección de imagen (60%) */}
         <div className="image-section">
           <div className="image-overlay" />
           <img 
@@ -84,7 +93,7 @@ function Login() {
           </div>
         </div>
 
-        {/* Right side - Login Form (40%) */}
+        {/* Sección de login (40%) */}
         <div className="form-section">
           <div className="form-container">
             <div className="header">

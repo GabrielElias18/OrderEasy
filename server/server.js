@@ -12,6 +12,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const ingresoRoutes = require('./routes/ventaRoutes');
 const egresoRoutes = require('./routes/egresoRoutes');
+const adminRoutes = require('./routes/admin/adminRoutes');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use('/api/', categoryRoutes);
 app.use('/api/productos', productRoutes);
 app.use('/api/ventas', ingresoRoutes);
 app.use('/api/egresos', egresoRoutes);
+app.use('/admin', adminRoutes);
 
 // Iniciar servidor solo si la conexión es exitosa
 const PORT = process.env.PORT || 3000;

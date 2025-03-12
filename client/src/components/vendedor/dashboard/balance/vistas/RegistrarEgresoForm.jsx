@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
-import { getCategoriesByUser } from "../../../../services/categoryServices";
-import { getAllProducts } from "../../../../services/productServices";
-import { createEgreso } from "../../../../services/egresoService";
+import { getCategoriesByUser } from "../../../../../services/categoryServices";
+import { getAllProducts } from "../../../../../services/productServices";
+import { createEgreso } from "../../../../../services/egresoService";
 import "./styles/RegistrarIngresoForm.css";
 
 const RegistrarEgresoForm = ({ cerrarFormulario }) => {

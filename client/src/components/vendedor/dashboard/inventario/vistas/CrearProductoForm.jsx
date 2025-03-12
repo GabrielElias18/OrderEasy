@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "./styles/CrearProductoForm.css";
-import { createProduct } from "../../../../services/productServices";
-import { getCategoriesByUser } from "../../../../services/categoryServices";
+import { createProduct } from "../../../../../services/productServices";
+import { getCategoriesByUser } from "../../../../../services/categoryServices";
 
 function CrearProductoForm({ isVisible, onClose }) {
   const [nombre, setNombre] = useState("");

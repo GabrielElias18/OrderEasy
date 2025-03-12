@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2'; // Importamos SweetAlert2
 import './styles/GestionarCategoriaForm.css';
-import { getCategoriesByUser, updateCategory, deleteCategory } from '../../../../services/categoryServices';
+import { getCategoriesByUser, updateCategory, deleteCategory } from '../../../../../services/categoryServices';
 
 function GestionarCategoriaForm({ isVisible, onClose }) {
   const [categorias, setCategorias] = useState([]);

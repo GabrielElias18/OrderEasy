@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import './inicio.css'
 
 function Inicio() {
   const [user, setUser] = useState(null);

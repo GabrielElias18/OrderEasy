@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import "../vistas/styles/TablaVentas.css";
-import { getEgresos, deleteEgreso, updateEgreso } from "../../../../services/egresoService";
+import { getEgresos, deleteEgreso, updateEgreso } from "../../../../../services/egresoService";
 
 const TablaEgresos = ({ actualizarBalance }) => {
   const [egresos, setEgresos] = useState([]);

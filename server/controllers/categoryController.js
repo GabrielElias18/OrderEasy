@@ -4,9 +4,9 @@ const Categoria = require('../models/categoryModel');
 const createCategory = async (req, res) => {
   try {
     const { nombre, descripcion } = req.body;
-    const usuarioid = req.usuario.usuarioId; // Convertimos a la variable correcta
+    const usuarioId = req.usuario.usuarioId; // Corregido a "usuarioId" (mayúscula)
 
-    if (!usuarioid) {
+    if (!usuarioId) {
       return res.status(400).json({ mensaje: 'Usuario no autenticado.' });
     }
 
@@ -14,7 +14,7 @@ const createCategory = async (req, res) => {
     const categoriaExistente = await Categoria.findOne({
       where: {
         nombre,
-        usuarioid // Usamos `usuarioid` en lugar de `usuarioId`
+        usuarioid: usuarioId // Ajustado
       }
     });
 
@@ -26,7 +26,7 @@ const createCategory = async (req, res) => {
     const nuevaCategoria = await Categoria.create({
       nombre,
       descripcion,
-      usuarioid // Usamos `usuarioid` en lugar de `usuarioId`
+      usuarioid: usuarioId // Ajustado
     });
 
     res.status(201).json({
@@ -39,14 +39,13 @@ const createCategory = async (req, res) => {
   }
 };
 
-
 // Obtener las categorías de un usuario
 const getCategoriesByUser = async (req, res) => {
   try {
-    const usuarioid = req.usuario.usuarioId;
+    const usuarioId = req.usuario.usuarioId; // Corregido
 
     const categorias = await Categoria.findAll({
-      where: { usuarioid }, // Usamos `usuarioid` en lugar de `usuarioId`
+      where: { usuarioid: usuarioId }, // Ajustado
       order: [['createdat', 'DESC']]
     });
 
@@ -62,7 +61,7 @@ const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, descripcion } = req.body;
-    const usuarioid = req.usuario.usuarioid; // Corregimos a `usuarioid`
+    const usuarioId = req.usuario.usuarioId; // Corregido
 
     // Verificar si la categoría existe y pertenece al usuario
     const categoria = await Categoria.findOne({
@@ -95,7 +94,7 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const usuarioid = req.usuario.usuarioid; // Corregimos a `usuarioid`
+    const usuarioId = req.usuario.usuarioId; // Corregido
 
     // Verificar si la categoría existe y pertenece al usuario
     const resultado = await Categoria.destroy({

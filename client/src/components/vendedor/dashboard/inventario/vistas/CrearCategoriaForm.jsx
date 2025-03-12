@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2'; // Importa SweetAlert2
 import './styles/CrearCategoriaForm.css';
-import { createCategory } from '../../../../services/categoryServices'; // Importa el servicio
+import { createCategory } from '../../../../../services/categoryServices'; // Importa el servicio
 
 function CrearCategoriaForm({ isVisible, onClose }) {
   const [nombre, setNombre] = useState('');

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './styles/VisualizarProductos.css';
 import ProductoInfo from './ProductoInfo'; // Importar el componente ProductoInfo
-import { deleteProduct } from '../../../../services/productServices'; // Importar la función deleteProduct
+import { deleteProduct } from '../../../../../services/productServices'; // Importar la función deleteProduct
 
 function VisualizarProductos({ productos }) {
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);

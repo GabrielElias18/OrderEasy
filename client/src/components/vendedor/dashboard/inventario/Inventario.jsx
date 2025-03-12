@@ -4,8 +4,8 @@ import VisualizarProductos from './vistas/VisualizarProductos';
 import CrearCategoriaForm from './vistas/CrearCategoriaForm';
 import CrearProductoForm from './vistas/CrearProductoForm';
 import GestionarCategoriaForm from './vistas/GestionarCategoriaForm';
-import { getCategoriesByUser } from '../../../services/categoryServices';
-import { getAllProducts } from '../../../services/productServices';
+import { getCategoriesByUser } from '../../../../services/categoryServices';
+import { getAllProducts } from '../../../../services/productServices';
 import './Inventario.css';
 
 

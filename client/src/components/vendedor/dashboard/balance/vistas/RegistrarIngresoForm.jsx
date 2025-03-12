@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import { getCategoriesByUser } from "../../../../services/categoryServices";
-import { getAllProducts } from "../../../../services/productServices";
-import { createVenta } from "../../../../services/ventaService";
+import { getCategoriesByUser } from "../../../../../services/categoryServices";
+import { getAllProducts } from "../../../../../services/productServices";
+import { createVenta } from "../../../../../services/ventaService";
 import "./styles/RegistrarIngresoForm.css";
 
 const RegistrarIngresoForm = ({ cerrarFormulario }) => {
