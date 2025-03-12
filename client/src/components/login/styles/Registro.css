@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+.registro-container {
+  min-height: 100vh;
+  background-color: #f8f6f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.registro-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: white;
+  display: flex;
+  box-shadow: 0 20px 40px rgba(139, 69, 19, 0.1);
+}
+
+/* Sección de Imagen */
+.imagen-seccion {
+  display: none;
+  position: relative;
+  width: 45%;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .imagen-seccion {
+    display: block;
+  }
+}
+
+.imagen-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.9), rgba(101, 67, 33, 0.9));
+  z-index: 1;
+}
+
+.imagen-fondo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imagen-contenido {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding: 3rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.imagen-contenido h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.imagen-contenido p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Sección de Formulario */
+.formulario-seccion {
+  flex: 1;
+  background-color: white;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.formulario-contenedor {
+  width: 100%;
+  max-width: 480px;
+}
+
+.encabezado {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo .icono {
+  width: 32px;
+  height: 32px;
+  color: #8B4513;
+}
+
+.logo span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #8B4513;
+}
+
+.encabezado h2 {
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Grupos de Inputs */
+.grupo-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-grupo {
+  margin-bottom: 1.25rem;
+}
+
+.input-grupo label {
+  display: block;
+  color: #4a4a4a;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.input-grupo input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.input-grupo input:focus {
+  outline: none;
+  border-color: #8B4513;
+  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+}
+
+.input-grupo input::placeholder {
+  color: #9ca3af;
+}
+
+/* Botones */
+.boton-submit {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #8B4513;
+  color: white;
+  border: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.boton-submit:hover {
+  background-color: #6B3410;
+  transform: translateY(-1px);
+}
+
+.boton-submit:disabled {
+  background-color: #d1b8a8;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.volver-login {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.boton-volver {
+  background: none;
+  border: none;
+  color: #8B4513;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.boton-volver:hover {
+  color: #6B3410;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .registro-container {
+    padding: 0;
+  }
+
+  .registro-wrapper {
+    min-height: 100vh;
+  }
+
+  .grupo-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .registro-container {
+    padding: 0;
+  }
+
+  .registro-wrapper {
+    min-height: 100vh;
+  }
+
+  .formulario-seccion {
+    padding: 1.5rem;
+  }
+}

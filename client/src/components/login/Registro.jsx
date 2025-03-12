@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Boxes } from 'lucide-react';
+import { Package } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { registerUser } from '../../services/authServices';
-import '../login/styles/Login.css';
+import './styles/Registro.css';
 
 function Registro() {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function Registro() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validarEmail(formData.correo)) {
       Swal.fire({
         icon: 'error',
@@ -43,7 +43,7 @@ function Registro() {
       });
       return;
     }
-
+  
     if (formData.password !== formData.confirmPassword) {
       Swal.fire({
         icon: 'error',
@@ -52,9 +52,9 @@ function Registro() {
       });
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       await registerUser({
         primerNombre: formData.primerNombre,
@@ -63,9 +63,10 @@ function Registro() {
         segundoApellido: formData.segundoApellido,
         correo: formData.correo,
         telefono: formData.telefono,
-        contraseña: formData.password
+        contraseña: formData.password,
+        rol: 'vendedor' // 🔹 Asegurar que se registre como vendedor
       });
-
+  
       Swal.fire({
         icon: 'success',
         title: 'Registro exitoso',
@@ -75,7 +76,7 @@ function Registro() {
         showConfirmButton: false,
         willClose: () => navigate('/login')
       });
-
+  
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -86,38 +87,39 @@ function Registro() {
       setLoading(false);
     }
   };
+  
 
   return (
-    <div className="screen-container">
-      <div className="login-wrapper">
+    <div className="registro-container">
+      <div className="registro-wrapper">
         {/* Sección izquierda - Imagen */}
-        <div className="image-section">
-          <div className="image-overlay" />
+        <div className="imagen-seccion">
+          <div className="imagen-overlay" />
           <img 
             src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
-            alt="Inventory Management"
-            className="background-image"
+            alt="Gestión de Inventario"
+            className="imagen-fondo"
           />
-          <div className="image-content">
+          <div className="imagen-contenido">
             <h2>Sistema de Gestión de Inventarios</h2>
-            <p>Gestiona tu inventario con precisión y aumenta la productividad de tu negocio.</p>
+            <p>Optimiza tu inventario y mejora la eficiencia de tu negocio con nuestra solución gratuita.</p>
           </div>
         </div>
 
         {/* Sección derecha - Formulario */}
-        <div className="form-section">
-          <div className="form-container">
-            <div className="header">
+        <div className="formulario-seccion">
+          <div className="formulario-contenedor">
+            <div className="encabezado">
               <div className="logo">
-                <Boxes className="icon" />
+                <Package className="icono" />
+                <span>OrderEasy</span>
               </div>
-              <h1>OrderEasy</h1>
               <h2>Registro de Usuario</h2>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className='nombres'>
-                <div className="input-group">
+              <div className="grupo-inputs">
+                <div className="input-grupo">
                   <label htmlFor="primerNombre">Primer Nombre</label>
                   <input
                     type="text"
@@ -130,7 +132,7 @@ function Registro() {
                   />
                 </div>
 
-                <div className="input-group">
+                <div className="input-grupo">
                   <label htmlFor="segundoNombre">Segundo Nombre</label>
                   <input
                     type="text"
@@ -143,8 +145,8 @@ function Registro() {
                 </div>
               </div>
 
-              <div className="apellidos">
-                <div className="input-group">
+              <div className="grupo-inputs">
+                <div className="input-grupo">
                   <label htmlFor="primerApellido">Primer Apellido</label>
                   <input
                     type="text"
@@ -157,7 +159,7 @@ function Registro() {
                   />
                 </div>
 
-                <div className="input-group">
+                <div className="input-grupo">
                   <label htmlFor="segundoApellido">Segundo Apellido</label>
                   <input
                     type="text"
@@ -170,7 +172,7 @@ function Registro() {
                 </div>
               </div>
 
-              <div className="input-group">
+              <div className="input-grupo">
                 <label htmlFor="correo">Correo Electrónico</label>
                 <input
                   type="email"
@@ -183,7 +185,7 @@ function Registro() {
                 />
               </div>
 
-              <div className="input-group">
+              <div className="input-grupo">
                 <label htmlFor="telefono">Teléfono</label>
                 <input
                   type="tel"
@@ -196,7 +198,7 @@ function Registro() {
                 />
               </div>
 
-              <div className="input-group">
+              <div className="input-grupo">
                 <label htmlFor="password">Contraseña</label>
                 <input
                   type="password"
@@ -209,7 +211,7 @@ function Registro() {
                 />
               </div>
 
-              <div className="input-group">
+              <div className="input-grupo">
                 <label htmlFor="confirmPassword">Confirmar Contraseña</label>
                 <input
                   type="password"
@@ -222,17 +224,17 @@ function Registro() {
                 />
               </div>
 
-              <button type="submit" className="submit-button" disabled={loading}>
-                {loading ? 'Registrando...' : 'Registrarse'}
+              <button type="submit" className="boton-submit" disabled={loading}>
+                {loading ? 'Registrando...' : 'Crear Cuenta'}
               </button>
             </form>
 
-            <div className="register">
+            <div className="volver-login">
               <button 
-                className="register-button"
+                className="boton-volver"
                 onClick={() => navigate('/login')}
               >
-                Volver al Login
+                ¿Ya tienes cuenta? Iniciar Sesión
               </button>
             </div>
           </div>

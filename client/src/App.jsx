@@ -7,6 +7,7 @@ import Balance from './components/dashboard/balance/Balance';
 import Estadisticas from './components/dashboard/estadisticas/Estadisticas';
 import Login from './components/login/Login';
 import ProtectedRoute from './components/ProtectedRoute'; // Importar el componente de protección
+import Home from './components/inicio/landing'
 import Inicio from './components/dashboard/inicio/Inicio';
 import Registro from './components/login/Registro';
 
@@ -15,6 +16,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Ruta pública: Login */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path='/registro' element={<Registro/>} />
 
@@ -34,7 +36,7 @@ function App() {
         </Route>
 
         {/* Ruta de inicio */}
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </BrowserRouter>
   );

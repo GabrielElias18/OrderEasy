@@ -1,19 +1,25 @@
 const express = require('express');
 const { registerUser, loginUser } = require('../controllers/authController');
-const { verificarToken } = require('../middleware/authMiddleware');
+const { verificarToken, verificarAdministrador } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Ruta de registro
-router.post('/register', registerUser);
+// Registro público solo para vendedores
+router.post('/register-public', registerUser);
 
-// Ruta de inicio de sesión
+// Registro exclusivo para administradores
+router.post('/register-admin', verificarToken, verificarAdministrador, registerUser);
+
 router.post('/login', loginUser);
 
-// Ruta protegida (requiere token)
+// Ruta protegida para cualquier usuario autenticado
 router.get('/perfil', verificarToken, (req, res) => {
-  // El middleware verificó el token y adjuntó los datos del usuario
   res.status(200).json({ mensaje: 'Ruta protegida accedida con éxito', usuario: req.usuario });
+});
+
+// Ruta exclusiva para administradores
+router.get('/admin', verificarToken, verificarAdministrador, (req, res) => {
+  res.status(200).json({ mensaje: 'Bienvenido, administrador.', usuario: req.usuario });
 });
 
 module.exports = router;
