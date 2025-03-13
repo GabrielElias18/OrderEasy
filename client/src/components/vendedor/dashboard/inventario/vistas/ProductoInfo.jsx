@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import './styles/ProductoInfo.css';
 import { deleteProduct, getProductById } from '../../../../../services/productServices';
+import { getCategoriesByUser } from '../../../../../services/categoryServices';
 import EditarProductoForm from './EditarProductoForm';
 
 function ProductoInfo({ id, onClose }) {
   const [producto, setProducto] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    const fetchProducto = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -17,22 +19,38 @@ function ProductoInfo({ id, onClose }) {
           return;
         }
 
-        const data = await getProductById(id, token);
-        if (!data) {
+        // Obtener el producto
+        const productoData = await getProductById(id, token);
+        if (!productoData) {
           Swal.fire('Error', 'No se encontró el producto.', 'error');
           onClose();
           return;
         }
 
-        setProducto(data);
+        // Obtener las categorías
+        const categoriasData = await getCategoriesByUser(token);
+        setCategorias(categoriasData);
+
+        // Encontrar el nombre de la categoría correspondiente
+        if (productoData.categoriaid && categoriasData.length > 0) {
+          const categoriaEncontrada = categoriasData.find(
+            cat => String(cat.categoriaid) === String(productoData.categoriaid)
+          );
+          
+          if (categoriaEncontrada) {
+            productoData.categoriaNombre = categoriaEncontrada.nombre;
+          }
+        }
+
+        setProducto(productoData);
       } catch (error) {
-        console.error('Error al obtener el producto:', error);
-        Swal.fire('Error', 'Hubo un problema al cargar el producto.', 'error');
+        console.error('Error al obtener datos:', error);
+        Swal.fire('Error', 'Hubo un problema al cargar la información.', 'error');
         onClose();
       }
     };
 
-    fetchProducto();
+    fetchData();
   }, [id, onClose]);
 
   const handleDelete = async () => {
@@ -64,19 +82,36 @@ function ProductoInfo({ id, onClose }) {
     }
   };
 
-  const handleUpdate = (updatedProduct) => {
-    setProducto(updatedProduct);
-    setIsEditing(false);
-    Swal.fire({
-      title: 'Producto actualizado',
-      text: 'El producto se ha actualizado correctamente.',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    }).then(() => {
-      setTimeout(() => {
-        window.location.reload(); // 🔄 Se recarga con un pequeño retraso
-      }, 500);
-    });
+  const handleUpdate = async (updatedProduct) => {
+    try {
+      // Buscar el nombre de la categoría actualizada
+      if (updatedProduct.categoriaid && categorias.length > 0) {
+        const categoriaEncontrada = categorias.find(
+          cat => String(cat.categoriaid) === String(updatedProduct.categoriaid)
+        );
+        
+        if (categoriaEncontrada) {
+          updatedProduct.categoriaNombre = categoriaEncontrada.nombre;
+        }
+      }
+      
+      setProducto(updatedProduct);
+      setIsEditing(false);
+      
+      Swal.fire({
+        title: 'Producto actualizado',
+        text: 'El producto se ha actualizado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        setTimeout(() => {
+          window.location.reload(); // 🔄 Se recarga con un pequeño retraso
+        }, 500);
+      });
+    } catch (error) {
+      console.error('Error al actualizar el producto:', error);
+      Swal.fire('Error', 'Hubo un problema al actualizar el producto.', 'error');
+    }
   };
 
   if (!producto) return null;
@@ -114,7 +149,7 @@ function ProductoInfo({ id, onClose }) {
               <p><strong>Cantidad Disponible:</strong> {producto.cantidadDisponible}</p>
               <p><strong>Precio de Compra:</strong> ${producto.precioCompra}</p>
               <p><strong>Precio de Venta:</strong> ${producto.precioVenta}</p>
-              <p><strong>Categoría:</strong> {producto.categoriaNombre}</p>
+              <p><strong>Categoría:</strong> {producto.categoriaNombre || "Sin categoría"}</p>
             </div>
 
             <div className="detalle-acciones">

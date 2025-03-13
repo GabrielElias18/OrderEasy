@@ -5,6 +5,7 @@ import VisualizarProductos from './vistas/VisualizarProductos';
 import CrearCategoriaForm from './vistas/CrearCategoriaForm';
 import CrearProductoForm from './vistas/CrearProductoForm';
 import GestionarCategoriaForm from './vistas/GestionarCategoriaForm';
+import ProductoInfo from './vistas/ProductoInfo'; // Asegúrate de importar el componente ProductoInfo
 import { getCategoriesByUser } from '../../../../services/categoryServices';
 import { getAllProducts } from '../../../../services/productServices';
 import './Inventario.css';
@@ -15,7 +16,7 @@ function Inventario() {
   const [isGestionarCategoriaVisible, setGestionarCategoriaVisible] = useState(false);
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [selectedCategoria, setSelectedCategoria] = useState('');
+  const [selectedCategoriaId, setSelectedCategoriaId] = useState(''); // Cambiado a ID
   const [searchTerm, setSearchTerm] = useState('');
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
@@ -58,8 +59,9 @@ function Inventario() {
   };
 
   const productosFiltrados = productos.filter((producto) => {
-    const coincideCategoria = selectedCategoria
-      ? producto.categoriaNombre === selectedCategoria
+    // Filtrar por categoriaid en lugar de categoriaNombre
+    const coincideCategoria = selectedCategoriaId
+      ? String(producto.categoriaid) === String(selectedCategoriaId)
       : true;
 
     const coincideNombre = searchTerm
@@ -71,16 +73,21 @@ function Inventario() {
 
   const handleUpdateProduct = async (updatedProduct) => {
     try {
+      // Actualizar la lista de productos
       setProductos((prevProductos) =>
         prevProductos.map((producto) =>
-          producto._id === updatedProduct._id ? updatedProduct : producto
+          producto.productoid === updatedProduct.productoid ? updatedProduct : producto
         )
       );
+      
       await Swal.fire({
         icon: 'success',
         title: '¡Producto actualizado!',
         text: 'El producto se ha actualizado correctamente.',
       });
+      
+      // Recargar los productos para asegurarse de que todo esté actualizado
+      fetchProductos();
     } catch (error) {
       await Swal.fire({
         icon: 'error',
@@ -93,7 +100,7 @@ function Inventario() {
   const handleDeleteProduct = async (deletedProductId) => {
     try {
       setProductos((prevProductos) =>
-        prevProductos.filter((producto) => producto._id !== deletedProductId)
+        prevProductos.filter((producto) => producto.productoid !== deletedProductId)
       );
       await Swal.fire({
         icon: 'success',
@@ -139,12 +146,12 @@ function Inventario() {
           </button>
           <select
             className="inventario-select"
-            value={selectedCategoria}
-            onChange={(e) => setSelectedCategoria(e.target.value)}
+            value={selectedCategoriaId}
+            onChange={(e) => setSelectedCategoriaId(e.target.value)}
           >
             <option value="">Seleccione una categoría</option>
             {categorias.map((categoria) => (
-              <option key={categoria._id} value={categoria.nombre}>
+              <option key={categoria.categoriaid} value={categoria.categoriaid}>
                 {categoria.nombre}
               </option>
             ))}
@@ -171,24 +178,34 @@ function Inventario() {
       
       {productoSeleccionado && (
         <ProductoInfo
-          producto={productoSeleccionado}
-          onClose={() => setProductoSeleccionado(null)}
-          onDelete={handleDeleteProduct}
-          onUpdate={handleUpdateProduct}
+          id={productoSeleccionado.productoid}
+          onClose={() => {
+            setProductoSeleccionado(null);
+            fetchProductos(); // Recargar productos al cerrar detalles
+          }}
         />
       )}
       
       <CrearCategoriaForm
         isVisible={isCrearCategoriaVisible}
-        onClose={() => setCrearCategoriaVisible(false)}
+        onClose={() => {
+          setCrearCategoriaVisible(false);
+          fetchProductos(); // Recargar productos al cerrar formulario
+        }}
       />
       <CrearProductoForm
         isVisible={isCrearProductoVisible}
-        onClose={() => setCrearProductoVisible(false)}
+        onClose={() => {
+          setCrearProductoVisible(false);
+          fetchProductos(); // Recargar productos al cerrar formulario
+        }}
       />
       <GestionarCategoriaForm
         isVisible={isGestionarCategoriaVisible}
-        onClose={() => setGestionarCategoriaVisible(false)}
+        onClose={() => {
+          setGestionarCategoriaVisible(false);
+          fetchProductos(); // Recargar productos al cerrar formulario
+        }}
       />
     </div>
   );

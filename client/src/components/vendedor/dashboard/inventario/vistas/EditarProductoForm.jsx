@@ -44,43 +44,60 @@ function EditarProductoForm({ producto, onClose, onUpdate }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado");
-
+  
+      // Encontrar la categoría seleccionada
+      const categoriaSeleccionada = categorias.find(cat => String(cat.categoriaid) === String(categoriaId));
+      const categoriaNombre = categoriaSeleccionada ? categoriaSeleccionada.nombre : "";
+      
+      // Verificar que tengamos una categoría válida
+      if (!categoriaSeleccionada) {
+        throw new Error("Por favor selecciona una categoría válida");
+      }
+  
       const formData = new FormData();
       formData.append("nombre", nombre);
       formData.append("descripcion", descripcion);
       formData.append("cantidadDisponible", Number(cantidadDisponible));
       formData.append("precioCompra", Number(precioCompra));
       formData.append("precioVenta", Number(precioVenta));
-      formData.append("categoriaid", categoriaId);
-
+      formData.append("categoriaid", Number(categoriaId));
+      formData.append("categoria_nombre", categoriaNombre);
+  
       imagenes.forEach((imagen) => {
         formData.append("imagenes", imagen);
       });
-
+  
+      console.log("🚀 Datos enviados al backend:", Object.fromEntries(formData.entries()));
+  
       const updatedProduct = await updateProduct(producto.productoid, formData, token);
+  
+      if (!updatedProduct) {
+        throw new Error("No se recibió respuesta del servidor.");
+      }
+  
       onUpdate(updatedProduct);
       onClose();
-
+  
       Swal.fire({
         icon: "success",
         title: "¡Producto actualizado!",
         text: "El producto se ha actualizado correctamente.",
       });
+  
     } catch (error) {
-      console.error("Error al actualizar el producto:", error);
+      console.error("❌ Error al actualizar el producto:", error);
       Swal.fire({
-        icon: "success",
-        title: "¡Producto actualizado!",
-        text: "El producto se ha actualizado correctamente.",
-      }).then(() => {
-        window.location.reload(); // Recargar la página tras error
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el producto.",
       });
     }
   };
+  
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);

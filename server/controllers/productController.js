@@ -96,11 +96,10 @@ const getProductById = async (req, res) => {
   }
 };
 
-// Actualizar un producto (con actualización de imágenes opcional)
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, descripcion, cantidadDisponible, precioCompra, precioVenta, categoriaid } = req.body;
+    const { nombre, descripcion, cantidadDisponible, precioCompra, precioVenta, categoriaid, categoria_nombre } = req.body;
     const usuarioid = req.usuario.usuarioId;
 
     // Buscar el producto y verificar que pertenece al usuario
@@ -108,6 +107,16 @@ const updateProduct = async (req, res) => {
 
     if (!producto) {
       return res.status(404).json({ mensaje: 'Producto no encontrado o no pertenece al usuario.' });
+    }
+
+    // Obtener el nombre de la categoría directamente de la base de datos si no se proporciona
+    let nombreCategoria = categoria_nombre;
+    
+    if (!nombreCategoria && categoriaid) {
+      const categoria = await Categoria.findByPk(categoriaid);
+      if (categoria) {
+        nombreCategoria = categoria.nombre;
+      }
     }
 
     // Manejo de imágenes: si se suben nuevas, reemplazar; si no, conservar las existentes
@@ -123,6 +132,7 @@ const updateProduct = async (req, res) => {
       precioCompra: precioCompra !== undefined ? precioCompra : producto.precioCompra,
       precioVenta: precioVenta !== undefined ? precioVenta : producto.precioVenta,
       categoriaid: categoriaid || producto.categoriaid,
+      categoria_nombre: nombreCategoria, // Actualizar el nombre de la categoría
       imagenes: nuevasImagenes // Asegurar que no se borren imágenes existentes
     });
 
