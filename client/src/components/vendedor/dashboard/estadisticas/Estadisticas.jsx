@@ -155,7 +155,7 @@ function Estadisticas() {
   }
 
   return (
-    <div className="main-content">
+    <div className="stats-content">
       <div className="chartContainer">
         <h2>BALANCE MENSUAL</h2>
         <select onChange={(e) => setSelectedYear(e.target.value)} value={selectedYear}>
