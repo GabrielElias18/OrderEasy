@@ -1,16 +1,8 @@
-/* Statistics Dashboard Container */
-.stats-content {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    background: #f8fafc;
-    min-height: 100vh;
-  }
-  
-  /* Chart Container */
+
+   /* Chart Container */
   .chartContainer {
     background: white;
-    border-radius: 16px;
+    border-radius: 10px;
     padding: 2rem;
     margin-bottom: 2rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -90,7 +82,7 @@
   
   /* Responsive Design */
   @media (max-width: 768px) {
-    .main-content {
+    .stats-content {
       padding: 1rem;
     }
   
