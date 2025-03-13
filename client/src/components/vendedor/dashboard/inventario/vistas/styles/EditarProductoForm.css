@@ -194,13 +194,7 @@
     }
   }
   
-  /* Error States */
-  .form-group input:invalid,
-  .form-group textarea:invalid,
-  .form-group select:invalid {
-    border-color: #f44336;
-  }
-  
+
   /* Disabled States */
   .form-group input:disabled,
   .form-group textarea:disabled,
