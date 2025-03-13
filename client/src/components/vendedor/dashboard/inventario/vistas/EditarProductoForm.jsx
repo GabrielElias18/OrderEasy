@@ -162,6 +162,7 @@ function EditarProductoForm({ producto, onClose, onUpdate }) {
             </div>
           )}
           <button type="submit" className="guardar-btn">Guardar Cambios</button>
+          <button type="submit" className="guardar-btn" onClick={onClose}>Atras</button>
         </form>
       </div>
     </div>

@@ -63,7 +63,7 @@ function ProductoInfo({ id, onClose }) {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar',
     });
-
+  
     if (confirmarEliminar.isConfirmed) {
       try {
         const token = localStorage.getItem('token');
@@ -71,10 +71,15 @@ function ProductoInfo({ id, onClose }) {
           Swal.fire('Error', 'No se encontró el token de autenticación.', 'error');
           return;
         }
-
+  
         await deleteProduct(id, token);
-        Swal.fire('Eliminado', 'El producto ha sido eliminado.', 'success');
-        onClose(); // Cerrar el modal después de eliminar
+        
+        Swal.fire('Eliminado', 'El producto ha sido eliminado.', 'success').then(() => {
+          setTimeout(() => {
+            window.location.reload(); // 🔄 Se recarga la página después de eliminar
+          }, 500);
+        });
+  
       } catch (error) {
         console.error('Error al eliminar el producto:', error);
         Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
