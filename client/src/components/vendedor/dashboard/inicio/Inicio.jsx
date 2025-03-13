@@ -149,7 +149,7 @@ function Inicio() {
             <TrendingUp className="header-icon" />
             <h3>Funcionalidades Disponibles</h3>
           </div>
-          <div className="features-grid">
+          <div className="featuress-grid">
             <div className="feature-item">
               <h4>Inventario</h4>
               <ul>

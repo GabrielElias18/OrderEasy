@@ -24,6 +24,8 @@
   padding: 2.5rem;
   transform: scale(0.9);
   animation: modalEnter 0.3s ease-in-out forwards; /* Animación de entrada */
+  overflow-y: auto; /* Siempre muestra el scroll */
+  max-height: 90vh; /* Ajusta la altura para que nunca sobresalga */
 }
 
 /* Animación al abrir el modal */
@@ -209,6 +211,7 @@
     height: 100vh;
     border-radius: 0;
     overflow-y: auto;
+
   }
 
   .detalle-info p {
