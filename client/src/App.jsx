@@ -20,6 +20,7 @@ function App() {
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
 

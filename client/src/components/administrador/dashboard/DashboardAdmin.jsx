@@ -1,18 +1,15 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
+import SidebarAdmin from './sidebar/SidebarAdmin';
+
 
 const DashboardAdmin = () => {
   return (
-    <div>
-      <h1>Panel de Administrador</h1>
-      <nav>
-        <ul>
-          <li><Link to="usuarios">Gestión de Usuarios</Link></li>
-          <li><Link to="reportes">Reportes</Link></li>
-          <li><Link to="configuracion">Configuración</Link></li>
-        </ul>
-      </nav>
-      <Outlet />
+    <div className="dashboard-container">
+      <SidebarAdmin />
+      <main className="main-content">
+        <Outlet />
+      </main>
     </div>
   );
 };

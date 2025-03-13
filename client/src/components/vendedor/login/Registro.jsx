@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Package } from 'lucide-react';
+import { Package, Home } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { registerUser } from '../../../services/authServices';
 import './styles/Registro.css';
@@ -91,6 +91,13 @@ function Registro() {
 
   return (
     <div className="registro-container">
+      <button 
+        className="boton-home"
+        onClick={() => navigate('/')}
+      >
+        <Home className="icono-home" />
+        <span>Volver al Inicio</span>
+      </button>
       <div className="registro-wrapper">
         {/* Sección izquierda - Imagen */}
         <div className="imagen-seccion">
