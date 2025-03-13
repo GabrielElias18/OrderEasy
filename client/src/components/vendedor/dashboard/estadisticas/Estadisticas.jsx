@@ -4,11 +4,17 @@ import 'chart.js/auto';
 import Sidebar from '../sidebar/Sidebar';
 import { getVentas } from '../../../../services/ventaService';
 import { getEgresos } from '../../../../services/egresoService';
+import './Estadisticas.css'
 
 function Estadisticas() {
-  const [productIncomeData, setProductIncomeData] = useState(null);
+  const [ventas, setVentas] = useState([]);
+  const [egresos, setEgresos] = useState([]);
+  const [topProductSalesData, setTopProductSalesData] = useState(null);
   const [monthlyBalanceData, setMonthlyBalanceData] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(null);
+  const [availableYears, setAvailableYears] = useState([]);
 
+  // 🔹 Cargar datos de ventas y egresos al montar el componente
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -18,97 +24,133 @@ function Estadisticas() {
           return;
         }
 
-        const [ventas, egresos] = await Promise.all([
+        const [ventasData, egresosData] = await Promise.all([
           getVentas(token),
           getEgresos(token),
         ]);
 
-        if (!Array.isArray(ventas) || !Array.isArray(egresos)) {
+        if (!Array.isArray(ventasData) || !Array.isArray(egresosData)) {
           console.error('Datos no válidos recibidos.');
           return;
         }
 
-        // Procesar ingresos por producto
-        const ingresosPorProducto = ventas.reduce((acc, venta) => {
-          acc[venta.productoNombre] = (acc[venta.productoNombre] || 0) + venta.total;
-          return acc;
-        }, {});
+        setVentas(ventasData);
+        setEgresos(egresosData);
 
-        const sortedProductoLabels = Object.keys(ingresosPorProducto).sort(
-          (a, b) => ingresosPorProducto[b] - ingresosPorProducto[a]
-        );
-        const sortedProductoIngresos = sortedProductoLabels.map(label => ingresosPorProducto[label]);
+        // 🔹 Extraer años disponibles desde los datos
+        const yearsSet = new Set([
+          ...ventasData.map(v => new Date(v.createdAt).getFullYear()),
+          ...egresosData.map(e => new Date(e.createdAt).getFullYear()),
+        ]);
 
-        const colores = sortedProductoLabels.map(
-          () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
-        );
-
-        setProductIncomeData({
-          labels: sortedProductoLabels,
-          datasets: [
-            {
-              label: 'Ingresos por Producto (COP)',
-              data: sortedProductoIngresos,
-              backgroundColor: colores,
-              borderColor: colores.map(color => color.replace('0.5', '1')),
-              borderWidth: 1,
-            },
-          ],
-        });
-
-        // Calcular balance mensual
-        const calcularBalanceMensual = () => {
-          const ingresosPorMes = ventas.reduce((acc, venta) => {
-            const fecha = new Date(venta.createdAt);
-            const mes = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
-            acc[mes] = (acc[mes] || 0) + (venta.total || 0);
-            return acc;
-          }, {});
-
-          const egresosPorMes = egresos.reduce((acc, egreso) => {
-            const fecha = new Date(egreso.createdAt);
-            const mes = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
-            acc[mes] = (acc[mes] || 0) + (egreso.monto || 0);
-            return acc;
-          }, {});
-
-          const allMonths = [...new Set([...Object.keys(ingresosPorMes), ...Object.keys(egresosPorMes)])].sort();
-          const balanceMensual = allMonths.map(mes => (ingresosPorMes[mes] || 0) - (egresosPorMes[mes] || 0));
-
-          return { labels: allMonths, data: balanceMensual };
-        };
-
-        const balanceMensual = calcularBalanceMensual();
-
-        setMonthlyBalanceData({
-          labels: balanceMensual.labels,
-          datasets: [
-            {
-              label: 'Balance Mensual (COP)',
-              data: balanceMensual.data,
-              fill: false,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              tension: 0.1,
-            },
-          ],
-        });
+        const years = [...yearsSet].sort();
+        setAvailableYears(years);
+        setSelectedYear(years.length > 0 ? years[years.length - 1] : null);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error al obtener los datos:', error);
       }
     };
 
     fetchData();
   }, []);
 
-  const formatToCOP = (value) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
-    }).format(value);
-  };
+  // 🔹 Calcular balance mensual cuando cambie `selectedYear`
+  useEffect(() => {
+    if (!selectedYear) return;
+  
+  
+    const ingresosPorMes = {};
+    const egresosPorMes = {};
+  
+    // Procesar ventas
+    ventas.forEach(venta => {
+      if (!venta.createdAt) return;
+      const fecha = new Date(venta.createdAt);
+      const year = fecha.getFullYear();
+      const mes = `${year}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
+  
+  
+      if (year === parseInt(selectedYear)) {
+        ingresosPorMes[mes] = (ingresosPorMes[mes] || 0) + Number(venta.total || 0);
+      }
+    });
+  
+    // Procesar egresos
+    egresos.forEach(egreso => {
+      if (!egreso.createdAt) return;
+      const fecha = new Date(egreso.createdAt);
+      const year = fecha.getFullYear();
+      const mes = `${year}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
+    
+    
+      if (year === parseInt(selectedYear)) {
+        egresosPorMes[mes] = (egresosPorMes[mes] || 0) + Number(egreso.total || 0);
+      }
+    });
+  
 
-  if (!productIncomeData || !monthlyBalanceData) {
+  
+    // Generar meses del año completo, incluso si no hay transacciones
+    const allMonths = Array.from({ length: 12 }, (_, i) => {
+      const mes = String(i + 1).padStart(2, '0');
+      return `${selectedYear}-${mes}`;
+    });
+  
+  
+    // Calcular balance mensual
+    const balanceMensual = allMonths.map(mes =>
+      (Number(ingresosPorMes[mes]) || 0) - (Number(egresosPorMes[mes]) || 0)
+    );
+    
+  
+  
+    setMonthlyBalanceData({
+      labels: allMonths,
+      datasets: [
+        {
+          label: `Balance Mensual (${selectedYear})`,
+          data: balanceMensual,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          fill: false,
+          tension: 0.3,
+        },
+      ],
+    });
+  }, [selectedYear, ventas, egresos]); // Se recalcula cuando cambian estos valores
+
+  // 🔹 Procesar TOP 10 productos más vendidos
+  useEffect(() => {
+    if (ventas.length === 0) return;
+
+    const unidadesVendidasPorProducto = ventas.reduce((acc, venta) => {
+      acc[venta.productoNombre] = (acc[venta.productoNombre] || 0) + venta.cantidad;
+      return acc;
+    }, {});
+
+    const sortedProducts = Object.entries(unidadesVendidasPorProducto)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 15);
+
+    setTopProductSalesData({
+      labels: sortedProducts.map(([nombre]) => nombre),
+      datasets: [
+        {
+          label: 'Cantidad de Unidades Vendidas',
+          data: sortedProducts.map(([, cantidad]) => cantidad),
+          backgroundColor: sortedProducts.map(
+            () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
+          ),
+          borderWidth: 1,
+        },
+      ],
+    });
+  }, [ventas]);
+
+  if (!topProductSalesData || !monthlyBalanceData) {
     return <p>Cargando datos...</p>;
   }
 
@@ -116,44 +158,44 @@ function Estadisticas() {
     <div className="main-content">
       <div className="chartContainer">
         <h2>BALANCE MENSUAL</h2>
-        <Line 
-          data={monthlyBalanceData} 
-          options={{
-            scales: {
-              y: {
-                suggestedMin: Math.min(...monthlyBalanceData.datasets[0].data) - 1000, 
+        <select onChange={(e) => setSelectedYear(e.target.value)} value={selectedYear}>
+          {availableYears.map(year => (
+            <option key={year} value={year}>{year}</option>
+          ))}
+        </select>
+
+        <Line data={monthlyBalanceData} options={{
+          scales: {
+            y: {
+              beginAtZero: false,
+              suggestedMin: Math.min(...monthlyBalanceData.datasets[0].data) - 1000,
+              suggestedMax: Math.max(...monthlyBalanceData.datasets[0].data) + 1000,
+            },
+          },
+          plugins: {
+            tooltip: {
+              position: 'nearest',
+              callbacks: {
+                label: (context) => `Balance: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(context.raw)}`,
               },
             },
-            plugins: {
-              tooltip: {
-                position: 'nearest',
-                callbacks: {
-                  label: (context) => {
-                    return `Balance: ${formatToCOP(context.raw)}`;
-                  },
-                },
-              },
-            },
-          }} 
-        />
+          },
+        }} />
       </div>
+
       <div className="chartContainer">
-        <h2>INGRESOS GENERADOS POR PRODUCTO</h2>
-        <Bar 
-          data={productIncomeData} 
-          options={{
-            plugins: {
-              tooltip: {
-                position: 'nearest',
-                callbacks: {
-                  label: (context) => {
-                    return `Ingreso: ${formatToCOP(context.raw)}`;
-                  },
-                },
+        <h2>TOP 15 PRODUCTOS MÁS VENDIDOS</h2>
+        <Bar data={topProductSalesData} options={{
+          indexAxis: 'y',
+          plugins: {
+            tooltip: {
+              position: 'nearest',
+              callbacks: {
+                label: (context) => `Unidades: ${context.raw}`,
               },
             },
-          }} 
-        />
+          },
+        }} />
       </div>
     </div>
   );
