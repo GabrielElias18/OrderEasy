@@ -1,104 +1,224 @@
-/* Botones a la derecha */
-
-b {
-  font-size: 25px;
-}
-.botones {
+/* balance.css */
+.balance-container {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.nuevo-ingreso {
-  color: white;
-  background-color: green;
-  border-radius: 25% 10%;
-}
-
-.nuevo-egreso {
-  color: white;
-  background-color: red;
-  border-radius: 25% 10%;
-}
-
-/* Distribuir los h3 en línea horizontal con más margen */
-.balance {
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-  margin: 40px auto; /* Aumentamos el margen superior e inferior */
-  padding: 20px 0; /* Mayor separación interna */
-  width: 85%; /* Reduce un poco el ancho para centrar más */
-}
-
-
-
-/* Botones inferiores ocupando todo el ancho */
-.botones-expandibles {
-  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
   width: 100%;
 }
 
-.tick {
-  background-color: rgb(236, 236, 236);
-  padding: 20px 6rem;
-  border-radius: 15px;
-
+/* Top Action Buttons */
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
-.btn-ingresos,
-.btn-egresos {
-  flex: 1; /* Hace que ambos botones ocupen el mismo espacio */
-  padding: 15px;
-  font-size: 16px;
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
   border: none;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
+  transition: all 0.3s ease;
   color: white;
-  transition: background-color 0.15s ease-in-out; /* Transición suave */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.icon-ingreso {
-  color: #138d4c;
-  font-size: 25px;
+.action-button-income {
+  background-color: #10b981;
 }
 
-.icon-egreso {
-  color: #dc3545;
-  font-size: 25px;
+.action-button-income:hover {
+  background-color: #059669;
 }
 
-.icon-balance {
-  font-size: 25px;
-  color: blue;
+.action-button-expense {
+  background-color: #ef4444;
 }
 
-/* Estilo normal */
-.btn-ingresos {
-  background-color: green;
+.action-button-expense:hover {
+  background-color: #dc2626;
 }
 
-.btn-egresos {
-  background-color: red;
+.button-icon {
+  width: 20px;
+  height: 20px;
 }
 
-/* Efecto hover: color más oscuro */
-.btn-ingresos:hover {
-  background-color: #006400; /* Verde más oscuro */
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
-.btn-egresos:hover {
-  background-color: #8b0000; /* Rojo más oscuro */
+.metric-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
 }
 
-.balance-general {
-  color: blue;
+.metric-card:hover {
+  transform: translateY(-2px);
 }
 
-.ingresos {
-  color: green;
+.total-balance {
+  background: white;
 }
 
-.egresos { 
-  color: red
+.metric-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+}
+
+.total-balance .metric-icon {
+  background-color: #3b82f6;
+  color: white;
+  width: 70px;
+  height: 70px;
+  font-size: 1.75rem;
+}
+
+.income .metric-icon {
+  background-color: #10b981;
+  color: white;
+}
+
+.expense .metric-icon {
+  background-color: #ef4444;
+  color: white;
+}
+
+.metric-content {
+  flex: 1;
+}
+
+.metric-content h3 {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.total-balance .metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+  color: #111827;
+}
+
+/* Tab Controls */
+.tab-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 500px;
+}
+
+.tab-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-button.active {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.tab-button:hover:not(.active) {
+  background: #f9fafb;
+  color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 1280px) {
+  .metrics-grid {
+    gap: 1.25rem;
+  }
+  
+  .metric-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .balance-container {
+    padding: 1.25rem;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .total-balance {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-button {
+    padding: 0.625rem 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .balance-container {
+    padding: 1rem;
+  }
+  
+  .top-actions {
+    flex-direction: column;
+  }
+  
+  .action-button {
+    width: 100%;
+  }
 }

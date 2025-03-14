@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { Plus, TrendingUp, TrendingDown, DollarSign, Edit2, Trash2 } from 'lucide-react';
 import RegistrarIngresoForm from "./vistas/RegistrarIngresoForm";
 import RegistrarEgresoForm from "./vistas/RegistrarEgresoForm";
 import TablaIngresos from "./vistas/TablaIngresos";
 import TablaEgresos from "./vistas/TablaEgresos";
 import { getVentas } from "../../../../services/ventaService";
 import { getEgresos } from "../../../../services/egresoService";
-import { IoMdTrendingUp } from "react-icons/io";
-import { PiTrendDownBold } from "react-icons/pi";
-import { MdAttachMoney } from "react-icons/md";
-
-import "./balance.css";
+import "./Balance.css";
 
 function Balance({ token }) {
   const [mostrarTabla, setMostrarTabla] = useState("ingresos");
@@ -42,76 +39,93 @@ function Balance({ token }) {
     fetchDatos();
   }, [token]);
 
-  // Formatear valores a moneda colombiana
   const formatoMoneda = (valor) => {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",
       currency: "COP",
-      minimumFractionDigits: 0, // Evita que se muestren decimales
-      maximumFractionDigits: 0, // Fuerza a que no haya decimales
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(valor);
   };
-  
 
   return (
-    <div>
-      {/* Botones para abrir los formularios */}
-      <div className="botones">
+    <div className="balance-container">
+      <div className="top-actions">
         <button
-          className="nuevo-ingreso"
+          className="action-button action-button-income"
           onClick={() => setMostrarIngreso(true)}
+          title="Registrar nueva venta"
         >
-          Registrar Venta
+          <Plus className="button-icon" />
+          <span>Registrar Venta</span>
         </button>
-        <button className="nuevo-egreso" onClick={() => setMostrarEgreso(true)}>
-          Registrar Egreso
-        </button>
-      </div>
-
-      {/* Balance distribuido horizontalmente */}
-      <div className="balance">
-        <div className="tick balance-general">
-          <MdAttachMoney className="icon-balance" />
-          <h3>Balance General</h3>
-          <b>{formatoMoneda(ingresosTotales - egresosTotales)}</b>
-        </div>
-        <div className="tick ingresos">
-          <IoMdTrendingUp className="icon-ingreso" />
-          <h3>Ingresos Totales</h3>
-          <b>{formatoMoneda(ingresosTotales)}</b>
-        </div>
-        <div className="tick egresos">
-          <PiTrendDownBold className="icon-egreso" />
-          <h3>Egresos Totales</h3>
-          <b>{formatoMoneda(egresosTotales)}</b>
-        </div>
-      </div>
-
-      {/* Botones inferiores */}
-      <div className="botones-expandibles">
         <button
-          className="btn-ingresos"
+          className="action-button action-button-expense"
+          onClick={() => setMostrarEgreso(true)}
+          title="Registrar nuevo egreso"
+        >
+          <Plus className="button-icon" />
+          <span>Registrar Egreso</span>
+        </button>
+      </div>
+
+      <div className="metrics-grid">
+        <div className="metric-card total-balance">
+          <div className="metric-icon">
+            <DollarSign size={32} />
+          </div>
+          <div className="metric-content">
+            <h3>Balance General</h3>
+            <p className="metric-value">{formatoMoneda(ingresosTotales - egresosTotales)}</p>
+          </div>
+        </div>
+
+        <div className="metric-card income">
+          <div className="metric-icon">
+            <TrendingUp size={24} />
+          </div>
+          <div className="metric-content">
+            <h3>Ingresos Totales</h3>
+            <p className="metric-value">{formatoMoneda(ingresosTotales)}</p>
+          </div>
+        </div>
+
+        <div className="metric-card expense">
+          <div className="metric-icon">
+            <TrendingDown size={24} />
+          </div>
+          <div className="metric-content">
+            <h3>Egresos Totales</h3>
+            <p className="metric-value">{formatoMoneda(egresosTotales)}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="tab-controls">
+        <button
+          className={`tab-button ${mostrarTabla === "ingresos" ? "active" : ""}`}
           onClick={() => setMostrarTabla("ingresos")}
         >
-          Ingresos
+          <TrendingUp size={18} />
+          <span>Ingresos</span>
         </button>
         <button
-          className="btn-egresos"
+          className={`tab-button ${mostrarTabla === "egresos" ? "active" : ""}`}
           onClick={() => setMostrarTabla("egresos")}
         >
-          Egresos
+          <TrendingDown size={18} />
+          <span>Egresos</span>
         </button>
       </div>
 
-      {/* Mostrar la tabla correspondiente y actualizar el balance después de una acción */}
-      {mostrarTabla === "ingresos" && (
-        <TablaIngresos actualizarBalance={fetchDatos} />
-      )}
-      {mostrarTabla === "egresos" && (
-        <TablaEgresos actualizarBalance={fetchDatos} />
-      )}
+      <div className="table-container">
+        {mostrarTabla === "ingresos" ? (
+          <TablaIngresos actualizarBalance={fetchDatos} />
+        ) : (
+          <TablaEgresos actualizarBalance={fetchDatos} />
+        )}
+      </div>
 
-      {/* Formularios flotantes */}
       {mostrarIngreso && (
         <RegistrarIngresoForm
           cerrarFormulario={() => setMostrarIngreso(false)}
