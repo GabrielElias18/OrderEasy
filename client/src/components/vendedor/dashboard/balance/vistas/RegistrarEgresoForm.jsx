@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { X, DollarSign, Package, AlertCircle } from 'lucide-react';
+import { X, Package, AlertCircle } from 'lucide-react';
 import Swal from "sweetalert2";
 import { getCategoriesByUser } from "../../../../../services/categoryServices";
 import { getAllProducts } from "../../../../../services/productServices";
@@ -10,66 +10,58 @@ import "./styles/RegistrarEgresoForm.css";
 const RegistrarEgresoForm = ({ cerrarFormulario }) => {
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
   const [categoriasConProductos, setCategoriasConProductos] = useState([]);
-  const [cargando, setCargando] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-
-  const productoIdSeleccionado = watch("productoId");
+  const [cargando, setCargando] = useState(false);
 
   useEffect(() => {
     const cargarDatos = async () => {
       try {
         const token = localStorage.getItem("token");
-        let categoriasData = await getCategoriesByUser(token);
-        let productosData = await getAllProducts(token);
-
-        if (categoriasData && typeof categoriasData === "object") {
-          categoriasData = Array.isArray(categoriasData) ? categoriasData : Object.values(categoriasData);
-        } else {
-          throw new Error("Los datos de categorías no tienen un formato válido");
-        }
-
-        if (productosData && typeof productosData === "object") {
-          productosData = Array.isArray(productosData) ? productosData : Object.values(productosData);
-        } else {
-          throw new Error("Los datos de productos no tienen un formato válido");
-        }
-
+        const categoriasData = await getCategoriesByUser(token);
+        const productosData = await getAllProducts(token);
+  
         if (!Array.isArray(categoriasData) || !Array.isArray(productosData)) {
-          throw new Error("Los datos de la API no son un array después de la conversión");
+          console.error("Los datos de la API no son un array");
+          return;
         }
-
+  
+        // Crear un mapa indexado por categoriaid
         const categoriasMap = categoriasData.reduce((acc, categoria) => {
-          acc[categoria.nombre] = { ...categoria, productos: [] };
+          acc[categoria.categoriaid] = { ...categoria, productos: [] };
           return acc;
         }, {});
-
+  
+        // Asignar productos a su categoría correspondiente usando categoriaid
         productosData.forEach((producto) => {
-          if (categoriasMap[producto.categoriaNombre]) {
-            categoriasMap[producto.categoriaNombre].productos.push(producto);
+          if (categoriasMap[producto.categoriaid]) {
+            categoriasMap[producto.categoriaid].productos.push(producto);
           }
         });
-
+  
         setCategoriasConProductos(Object.values(categoriasMap));
       } catch (error) {
         console.error("Error al cargar datos:", error);
         await Swal.fire({
           icon: "error",
           title: "Error",
-          text: error.message || "Error al cargar los datos",
+          text: "Error al cargar los datos",
           confirmButtonColor: "#3085d6",
         });
       }
     };
-
+  
     cargarDatos();
   }, []);
 
+  const productoIdSeleccionado = watch("productoId");
+
   useEffect(() => {
-    if (productoIdSeleccionado) {
-      const producto = categoriasConProductos
-        .flatMap(categoria => categoria.productos)
-        .find(prod => prod.productoid === Number(productoIdSeleccionado));
-      setProductoSeleccionado(producto || null);
+    if (productoIdSeleccionado && categoriasConProductos.length > 0) {
+      const productoEncontrado = categoriasConProductos
+        .flatMap((cat) => cat.productos)
+        .find((prod) => String(prod.productoid) === String(productoIdSeleccionado));
+  
+      setProductoSeleccionado(productoEncontrado || null);
     }
   }, [productoIdSeleccionado, categoriasConProductos]);
 
@@ -78,12 +70,8 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
       setCargando(true);
       const token = localStorage.getItem("token");
 
-      if (!token) {
-        throw new Error("No hay token de autenticación. Inicie sesión.");
-      }
-
       if (!productoSeleccionado) {
-        throw new Error("Debe seleccionar un producto válido.");
+        throw new Error("Producto no encontrado");
       }
 
       const egresoData = {
@@ -94,7 +82,7 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
         descripcion: data.descripcion || "",
       };
 
-      const resultado = await createEgreso(egresoData, token);
+      await createEgreso(egresoData, token);
 
       const total = data.cantidad * productoSeleccionado.precioCompra;
 

@@ -19,23 +19,25 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
         const token = localStorage.getItem("token");
         const categoriasData = await getCategoriesByUser(token);
         const productosData = await getAllProducts(token);
-
+  
         if (!Array.isArray(categoriasData) || !Array.isArray(productosData)) {
           console.error("Los datos de la API no son un array");
           return;
         }
-
+  
+        // Crear un mapa indexado por categoriaid
         const categoriasMap = categoriasData.reduce((acc, categoria) => {
-          acc[categoria.nombre] = { ...categoria, productos: [] };
+          acc[categoria.categoriaid] = { ...categoria, productos: [] };
           return acc;
         }, {});
-
+  
+        // Asignar productos a su categoría correspondiente usando categoriaid
         productosData.forEach((producto) => {
-          if (categoriasMap[producto.categoriaNombre]) {
-            categoriasMap[producto.categoriaNombre].productos.push(producto);
+          if (categoriasMap[producto.categoriaid]) {
+            categoriasMap[producto.categoriaid].productos.push(producto);
           }
         });
-
+  
         setCategoriasConProductos(Object.values(categoriasMap));
       } catch (error) {
         console.error("Error al cargar datos:", error);
@@ -47,9 +49,10 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
         });
       }
     };
-
+  
     cargarDatos();
   }, []);
+  
 
   const productoIdSeleccionado = watch("productoId");
 
@@ -58,10 +61,11 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
       const productoEncontrado = categoriasConProductos
         .flatMap((cat) => cat.productos)
         .find((prod) => String(prod.productoid) === String(productoIdSeleccionado));
-
+  
       setProductoSeleccionado(productoEncontrado || null);
     }
   }, [productoIdSeleccionado, categoriasConProductos]);
+  
 
   const onSubmit = async (data) => {
     try {
@@ -147,7 +151,7 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
             >
               <option value="">Seleccione un producto</option>
               {categoriasConProductos.map((categoria) => (
-                <optgroup key={categoria.productoid} label={categoria.nombre}>
+                <optgroup key={categoria.categoriaid} label={categoria.nombre}>
                   {categoria.productos.length > 0 ? (
                     categoria.productos.map((producto) => (
                       <option key={producto.productoid} value={producto.productoid}>
