@@ -52,6 +52,10 @@ const Producto = sequelize.define('Producto', {
       key: 'usuarioId',
     },
   },
+  createdat: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  }
 }, {
   timestamps: false,
   tableName: 'productos',

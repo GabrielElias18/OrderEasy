@@ -21,7 +21,10 @@ const registerUser = async (req, res) => {
       return res.status(400).json({ mensaje: 'Debes registrar administradores en esta ruta.' });
     }
 
-    // Guardar la contraseña sin encriptar
+    // 🔐 Encriptar contraseña
+    const contraseñaEncriptada = await bcrypt.hash(contraseña, 10); // 10 = saltRounds
+
+    // Crear usuario con contraseña encriptada
     const nuevoUsuario = await Usuario.create({
       primer_nombre: primerNombre,
       segundo_nombre: segundoNombre,
@@ -29,7 +32,7 @@ const registerUser = async (req, res) => {
       segundo_apellido: segundoApellido,
       correo,
       telefono,
-      contraseña,  // 🔹 Se guarda tal cual sin encriptar
+      contraseña: contraseñaEncriptada,
       rol: nuevoRol
     });
 
@@ -59,8 +62,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-
-
 const loginUser = async (req, res) => {
   try {
     const { correo, contraseña } = req.body;
@@ -76,6 +77,7 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ mensaje: 'Usuario no encontrado.' });
     }
 
+    // 🔐 Comparar contraseñas encriptadas
     const contraseñaValida = await bcrypt.compare(contraseña, usuario.contraseña);
     if (!contraseñaValida) {
       return res.status(401).json({ mensaje: 'Credenciales inválidas.' });
@@ -106,6 +108,5 @@ const loginUser = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al iniciar sesión.', error: error.message });
   }
 };
-
 
 module.exports = { registerUser, loginUser };

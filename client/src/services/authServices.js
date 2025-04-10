@@ -23,7 +23,7 @@ const loginUser = async (correo, contraseña) => {
 // Función para manejar el registro
 const registerUser = async (usuarioData) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, usuarioData);
+    const response = await axios.post(`${API_URL}/register-public`, usuarioData);
     return response.data; // Devolver la respuesta con el token y usuario
   } catch (error) {
     if (error.response) {
