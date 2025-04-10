@@ -4,6 +4,7 @@ import Dashboard from './components/vendedor/dashboard/Dashboard';
 import Inventario from './components/vendedor/dashboard/inventario/Inventario';
 import Balance from './components/vendedor/dashboard/balance/Balance';
 import Estadisticas from './components/vendedor/dashboard/estadisticas/Estadisticas';
+import Prediccion from './components/vendedor/dashboard/prediccion/Prediccion';
 import Login from './components/vendedor/login/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './components/inicio/landing';
@@ -37,6 +38,7 @@ function App() {
           <Route path="inventario" element={<Inventario />} />
           <Route path="balance" element={<Balance />} />
           <Route path="estadisticas" element={<Estadisticas />} />
+          <Route path="prediccion" element={<Prediccion />} />
         </Route>
 
         {/* Rutas protegidas para administradores */}

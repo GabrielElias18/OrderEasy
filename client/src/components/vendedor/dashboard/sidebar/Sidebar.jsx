@@ -7,6 +7,7 @@ import {
   DollarSign, 
   LogOut,
   Menu,
+  Lightbulb,
   X 
 } from 'lucide-react';
 import Swal from 'sweetalert2';
@@ -100,6 +101,15 @@ function Sidebar() {
             >
               <LineChart className="menu-icon" />
               <span>Estadísticas</span>
+            </Link>
+
+            <Link 
+              to="prediccion" 
+              className={`menu-item ${location.pathname.includes('prediccion') ? 'active' : ''}`}
+              onClick={() => setIsOpen(false)}
+            >
+              <Lightbulb className="menu-icon" />
+              <span>Prediccion</span>
             </Link>
           </nav>
         </div>
