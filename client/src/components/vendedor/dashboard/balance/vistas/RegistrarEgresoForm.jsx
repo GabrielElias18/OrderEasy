@@ -1,231 +1,230 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { X, Package, AlertCircle } from 'lucide-react';
-import Swal from "sweetalert2";
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { getCategoriesByUser } from "../../../../../services/categoryServices";
-import { getAllProducts } from "../../../../../services/productServices";
-import { createEgreso } from "../../../../../services/egresoService";
-import "./styles/RegistrarEgresoForm.css";
 
-const RegistrarEgresoForm = ({ cerrarFormulario }) => {
-  const { register, handleSubmit, formState: { errors }, reset, watch } = useForm();
-  const [categoriasConProductos, setCategoriasConProductos] = useState([]);
+const FormularioPrediccion = () => {
+  const [productos, setProductos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+  const [formulario, setFormulario] = useState({
+    precioVenta: '',
+    cantidadDisponible: '',
+    historico_ventas: '',
+    tiempo_en_mercado: '',
+  });
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
-  const [cargando, setCargando] = useState(false);
+  const [resultado, setResultado] = useState(null);
+  const [resumenVentas, setResumenVentas] = useState([]);
 
   useEffect(() => {
-    const cargarDatos = async () => {
+    const obtenerDatos = async () => {
       try {
         const token = localStorage.getItem("token");
-        const categoriasData = await getCategoriesByUser(token);
-        const productosData = await getAllProducts(token);
-  
-        if (!Array.isArray(categoriasData) || !Array.isArray(productosData)) {
-          console.error("Los datos de la API no son un array");
-          return;
-        }
-  
-        // Crear un mapa indexado por categoriaid
-        const categoriasMap = categoriasData.reduce((acc, categoria) => {
-          acc[categoria.categoriaid] = { ...categoria, productos: [] };
-          return acc;
-        }, {});
-  
-        // Asignar productos a su categoría correspondiente usando categoriaid
-        productosData.forEach((producto) => {
-          if (categoriasMap[producto.categoriaid]) {
-            categoriasMap[producto.categoriaid].productos.push(producto);
-          }
-        });
-  
-        setCategoriasConProductos(Object.values(categoriasMap));
+        const usuarioId = localStorage.getItem("usuarioId");
+
+        const [productosRes, categoriasRes] = await Promise.all([
+          axios.get('http://localhost:3000/api/productos', {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          getCategoriesByUser(usuarioId),
+        ]);
+
+        setProductos(productosRes.data);
+        setCategorias(categoriasRes);
       } catch (error) {
-        console.error("Error al cargar datos:", error);
-        await Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Error al cargar los datos",
-          confirmButtonColor: "#3085d6",
-        });
+        console.error('Error al cargar productos o categorías:', error);
       }
     };
-  
-    cargarDatos();
+
+    obtenerDatos();
   }, []);
 
-  const productoIdSeleccionado = watch("productoId");
-
   useEffect(() => {
-    if (productoIdSeleccionado && categoriasConProductos.length > 0) {
-      const productoEncontrado = categoriasConProductos
-        .flatMap((cat) => cat.productos)
-        .find((prod) => String(prod.productoid) === String(productoIdSeleccionado));
-  
-      setProductoSeleccionado(productoEncontrado || null);
-    }
-  }, [productoIdSeleccionado, categoriasConProductos]);
+    const obtenerVentas = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const responseVentas = await axios.get('http://localhost:3000/api/ventas', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-  const onSubmit = async (data) => {
-    try {
-      setCargando(true);
-      const token = localStorage.getItem("token");
+        const resumen = {};
+        responseVentas.data.forEach((venta) => {
+          const nombreProducto = venta.producto_nombre;
+          const cantidadVendida = venta.cantidad || 0;
 
-      if (!productoSeleccionado) {
-        throw new Error("Producto no encontrado");
+          if (resumen[nombreProducto]) {
+            resumen[nombreProducto] += cantidadVendida;
+          } else {
+            resumen[nombreProducto] = cantidadVendida;
+          }
+        });
+
+        const resumenArray = Object.entries(resumen).map(([nombre, cantidad]) => ({
+          nombre,
+          cantidad,
+        }));
+
+        setResumenVentas(resumenArray);
+        console.log('Resumen de ventas por producto:', resumenArray);
+      } catch (error) {
+        console.error('Error al obtener ventas:', error);
       }
+    };
 
-      const egresoData = {
-        productoId: productoSeleccionado.productoid,
-        productoNombre: productoSeleccionado.nombre,
-        cantidad: Number(data.cantidad),
-        precioCompra: productoSeleccionado.precioCompra,
-        descripcion: data.descripcion || "",
-      };
+    obtenerVentas();
+  }, []);
 
-      await createEgreso(egresoData, token);
+  const handleSeleccionProducto = async (e) => {
+    const producto = JSON.parse(e.target.value);
+    setProductoSeleccionado(producto);
 
-      const total = data.cantidad * productoSeleccionado.precioCompra;
+    const fechaActual = new Date();
+    const fechaIngreso = new Date(producto.createdat);
+    const tiempoEnInventario = Math.floor((fechaActual - fechaIngreso) / (1000 * 60 * 60 * 24));
 
-      await Swal.fire({
-        icon: "success",
-        title: "¡Egreso Registrado!",
-        html: `
-          <div class="egreso-resumen">
-            <p><strong>${data.cantidad}</strong> unidades de <strong>${productoSeleccionado.nombre}</strong></p>
-            <p>Precio de compra: $${productoSeleccionado.precioCompra}</p>
-            <p class="total">Total: $${total}</p>
-          </div>
-        `,
-        confirmButtonColor: "#3085d6",
-        timer: 3000,
-        timerProgressBar: true,
-        position: "center",
-      }).then(() => {
-        window.location.reload();
+    try {
+      const token = localStorage.getItem("token");
+      const responseVentas = await axios.get('http://localhost:3000/api/ventas', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      reset();
-      cerrarFormulario();
+      const ventasProducto = responseVentas.data.filter(
+        venta => venta.producto_nombre === producto.nombre
+      );
+      const historicoVentas = ventasProducto.reduce((total, venta) => total + (venta.cantidad || 0), 0);
+
+      setFormulario({
+        ...formulario,
+        precioVenta: producto.precioVenta || '',
+        cantidadDisponible: producto.cantidadDisponible || '',
+        tiempo_en_mercado: tiempoEnInventario || '',
+        historico_ventas: historicoVentas || '',
+      });
+
     } catch (error) {
-      console.error("Error en el egreso:", error);
+      console.error('Error al obtener las ventas:', error);
+    }
+  };
 
-      await Swal.fire({
-        icon: "error",
-        title: "Error en el Egreso",
-        text: error.response?.data?.mensaje || error.message || "Error al registrar el egreso",
-        confirmButtonColor: "#3085d6",
+  const handleChange = (e) => {
+    setFormulario({
+      ...formulario,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const enviarDatos = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:8001/api/predecir', {
+        precio_venta: parseFloat(formulario.precioVenta),
+        cantidad_disponible: parseFloat(formulario.cantidadDisponible),
+        historico_ventas: parseFloat(formulario.historico_ventas),
+        tiempo_en_mercado: parseFloat(formulario.tiempo_en_mercado),
       });
-    } finally {
-      setCargando(false);
+
+      const clasePredicha = Object.entries(response.data).reduce((max, curr) => {
+        return curr[1] > max[1] ? curr : max;
+      });
+
+      setResultado({
+        probabilidades: response.data,
+        clasePredicha: clasePredicha[0],
+        porcentaje: clasePredicha[1],
+      });
+    } catch (error) {
+      console.error('Error al predecir:', error);
+      if (error.response) {
+        setResultado({ error: `Error del servidor: ${error.response.data.message || 'No se pudo predecir la demanda'}` });
+      } else if (error.request) {
+        setResultado({ error: 'El servidor no responde. Verifica la conexión.' });
+      } else {
+        setResultado({ error: `Error desconocido: ${error.message}` });
+      }
     }
   };
 
   return (
-    <div className="fondo-modal" onClick={cerrarFormulario}>
-      <div className="ventana-flotante" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2 className="titulo">Registrar Egreso</h2>
-          <button className="cerrar-modal" onClick={cerrarFormulario}>
-            <X size={20} />
-          </button>
-        </div>
+    <div>
+      <h2>Formulario de Predicción de Demanda</h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="formulario">
-          <div className="form-group">
-            <label className="label">Producto:</label>
-            <select
-              {...register("productoId", { required: "El producto es obligatorio" })}
-              className="select"
-            >
-              <option value="">Seleccione un producto</option>
-              {categoriasConProductos.map((categoria) => (
-                <optgroup key={categoria.categoriaid} label={categoria.nombre}>
-                  {categoria.productos.length > 0 ? (
-                    categoria.productos.map((producto) => (
-                      <option key={producto.productoid} value={producto.productoid}>
-                        {producto.nombre} - Stock: {producto.cantidadDisponible}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>No hay productos</option>
-                  )}
-                </optgroup>
-              ))}
-            </select>
-            {errors.productoId && (
-              <p className="error">
-                <AlertCircle size={16} />
-                {errors.productoId.message}
-              </p>
-            )}
-          </div>
+      <form onSubmit={enviarDatos}>
+        <select onChange={handleSeleccionProducto}>
+          <option value="">Seleccione un producto</option>
+          {categorias.map((categoria) => (
+            <optgroup key={categoria.categoriaid} label={categoria.nombre}>
+              {productos
+                .filter((producto) => producto.categoriaId === categoria.categoriaid)
+                .map((producto) => (
+                  <option key={producto.productoid} value={JSON.stringify(producto)}>
+                    {producto.nombre}
+                  </option>
+                ))}
+            </optgroup>
+          ))}
+        </select>
 
-          {productoSeleccionado && (
-            <div className="info-producto">
-              <h3>Información del Producto</h3>
-              <p>
-                <span>Precio de compra:</span>
-                <strong>${productoSeleccionado.precioCompra}</strong>
-              </p>
-              <p>
-                <span>Stock actual:</span>
-                <strong>{productoSeleccionado.cantidadDisponible} unidades</strong>
-              </p>
-            </div>
+        <input
+          type="number"
+          name="precioVenta"
+          placeholder="Precio de venta"
+          value={formulario.precioVenta}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="number"
+          name="cantidadDisponible"
+          placeholder="Cantidad disponible"
+          value={formulario.cantidadDisponible}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="number"
+          name="historico_ventas"
+          placeholder="Histórico de ventas"
+          value={formulario.historico_ventas}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="number"
+          name="tiempo_en_mercado"
+          placeholder="Tiempo en el mercado (en días)"
+          value={formulario.tiempo_en_mercado}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit">Predecir Demanda</button>
+      </form>
+
+      {resultado && (
+        <div style={{ marginTop: '1rem' }}>
+          {resultado.error ? (
+            <p style={{ color: 'red' }}>{resultado.error}</p>
+          ) : (
+            <>
+              <h3>Resultado:</h3>
+              <p><strong>Clase Predicha:</strong> {resultado.clasePredicha}</p>
+              <p><strong>Probabilidad:</strong> {resultado.porcentaje.toFixed(2)}%</p>
+              <h4>Distribución de Probabilidades:</h4>
+              <ul>
+                {Object.entries(resultado.probabilidades).map(([clase, prob]) => (
+                  <li key={clase}>{clase}: {prob.toFixed(2)}%</li>
+                ))}
+              </ul>
+            </>
           )}
-
-          <div className="form-group">
-            <label className="label">Cantidad:</label>
-            <input
-              type="number"
-              {...register("cantidad", {
-                required: "Ingrese una cantidad",
-                min: { value: 1, message: "La cantidad debe ser mayor a 0" },
-              })}
-              className="input"
-            />
-            {errors.cantidad && (
-              <p className="error">
-                <AlertCircle size={16} />
-                {errors.cantidad.message}
-              </p>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label className="label">Descripción:</label>
-            <textarea
-              {...register("descripcion", { required: "La descripción es obligatoria" })}
-              className="textarea"
-              placeholder="Ingrese una descripción del egreso"
-            ></textarea>
-            {errors.descripcion && (
-              <p className="error">
-                <AlertCircle size={16} />
-                {errors.descripcion.message}
-              </p>
-            )}
-          </div>
-
-          <div className="botones-formulario">
-            <button type="submit" className="boton boton-primario" disabled={cargando}>
-              {cargando ? (
-                <>
-                  <span className="cargando"></span>
-                  <span>Registrando...</span>
-                </>
-              ) : (
-                <>
-                  <Package size={18} />
-                  <span>Registrar Egreso</span>
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default RegistrarEgresoForm;
+export default FormularioPrediccion;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-import Sidebar from '../sidebar/Sidebar';
 import { getVentas } from '../../../../services/ventaService';
 import { getEgresos } from '../../../../services/egresoService';
 import './Estadisticas.css'
