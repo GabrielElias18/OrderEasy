@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Formulario.css'
 
 const FormularioPrediccion = () => {
   const [productos, setProductos] = useState([]);
@@ -31,6 +32,7 @@ const FormularioPrediccion = () => {
     obtenerProductos();
   }, []);
 
+
   useEffect(() => {
     const obtenerVentas = async () => {
       try {
@@ -40,37 +42,37 @@ const FormularioPrediccion = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-  
+
         const resumen = {};
         responseVentas.data.forEach((venta) => {
           const nombreProducto = venta.ProductoNombre; // <- corregido aquí
           const cantidadVendida = venta.cantidad || 0;
-  
+
           if (resumen[nombreProducto]) {
             resumen[nombreProducto] += cantidadVendida;
           } else {
             resumen[nombreProducto] = cantidadVendida;
           }
         });
-  
+
         const resumenArray = Object.entries(resumen).map(([nombre, cantidad]) => ({
           nombre,
           cantidad,
         }));
-  
+
         setResumenVentas(resumenArray);
-  
+
         // Mostrarlo solo en consola
         console.log('Resumen de ventas por producto:', resumenArray);
-  
+
       } catch (error) {
         console.error('Error al obtener ventas:', error);
       }
     };
-  
+
     obtenerVentas();
   }, []);
-  
+
 
 
   const handleSeleccionProducto = async (e) => {
@@ -91,7 +93,7 @@ const FormularioPrediccion = () => {
 
       console.log("Ventas obtenidas del backend:", responseVentas.data);
       console.log("Producto seleccionado:", producto.nombre);
-  
+
 
       // Crear resumen de ventas agrupadas por producto
       const resumen = {};
@@ -172,86 +174,91 @@ const FormularioPrediccion = () => {
   };
 
   return (
-    <div>
-      <h2>Formulario de Predicción de Demanda</h2>
+    <div className="container">
+      <div className="formCard">
+        <h2 className="title">Formulario de Predicción de Demanda</h2>
 
-      <form onSubmit={enviarDatos}>
-        <select onChange={handleSeleccionProducto}>
-          <option value="">Seleccione un producto</option>
-          {Object.entries(
-            productos.reduce((grupos, producto) => {
-              const categoria = producto.categoria?.nombre || 'Sin categoría';
-              if (!grupos[categoria]) grupos[categoria] = [];
-              grupos[categoria].push(producto);
-              return grupos;
-            }, {})
-          ).map(([categoria, productosCategoria]) => (
-            <optgroup key={categoria} label={categoria}>
-              {productosCategoria.map((producto) => (
+        <form className="form" onSubmit={enviarDatos}>
+          <select className="select" onChange={handleSeleccionProducto}>
+            <option value="">Seleccione un producto</option>
+            {productos
+              .slice() // para no mutar el array original
+              .sort((a, b) => a.nombre.localeCompare(b.nombre))
+              .map((producto) => (
                 <option key={producto._id} value={JSON.stringify(producto)}>
                   {producto.nombre}
                 </option>
               ))}
-            </optgroup>
-          ))}
-        </select>
+          </select>
 
-        <input
-          type="number"
-          name="precioVenta"
-          placeholder="Precio de venta"
-          value={formulario.precioVenta}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="cantidadDisponible"
-          placeholder="Cantidad disponible"
-          value={formulario.cantidadDisponible}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="historico_ventas"
-          placeholder="Histórico de ventas"
-          value={formulario.historico_ventas}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="number"
-          name="tiempo_en_mercado"
-          placeholder="Tiempo en el mercado (en días)"
-          value={formulario.tiempo_en_mercado}
-          onChange={handleChange}
-          required
-        />
+          <input
+            className="input"
+            type="number"
+            name="precioVenta"
+            placeholder="Precio de venta"
+            value={formulario.precioVenta}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="input"
+            type="number"
+            name="cantidadDisponible"
+            placeholder="Cantidad disponible"
+            value={formulario.cantidadDisponible}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="input"
+            type="number"
+            name="historico_ventas"
+            placeholder="Histórico de ventas"
+            value={formulario.historico_ventas}
+            onChange={handleChange}
+            required
+          />
+          <input
+            className="input"
+            type="number"
+            name="tiempo_en_mercado"
+            placeholder="Tiempo en el mercado (en días)"
+            value={formulario.tiempo_en_mercado}
+            onChange={handleChange}
+            required
+          />
 
-        <button type="submit">Predecir Demanda</button>
-      </form>
+          <button className="button" type="submit">
+            Predecir Demanda
+          </button>
+        </form>
 
-      {resultado && (
-        <div style={{ marginTop: '1rem' }}>
-          {resultado.error ? (
-            <p style={{ color: 'red' }}>{resultado.error}</p>
-          ) : (
-            <>
-              <h3>Resultado:</h3>
-              <p><strong>Clase Predicha:</strong> {resultado.clasePredicha}</p>
-              <p><strong>Probabilidad:</strong> {resultado.porcentaje.toFixed(2)}%</p>
-              <h4>Distribución de Probabilidades:</h4>
-              <ul>
-                {Object.entries(resultado.probabilidades).map(([clase, prob]) => (
-                  <li key={clase}>{clase}: {prob.toFixed(2)}%</li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-      )}
-
+        {resultado && (
+          <div className="results">
+            {resultado.error ? (
+              <p className="error">{resultado.error}</p>
+            ) : (
+              <>
+                <h3 className="resultTitle">Resultado:</h3>
+                <p className="resultItem">
+                  <span className="resultLabel">Clase Predicha:</span> {resultado.clasePredicha}
+                </p>
+                <p className="resultItem">
+                  <span className="resultLabel">Probabilidad:</span> {resultado.porcentaje.toFixed()}%
+                </p>
+                <h4 className="resultTitle">Distribución de Probabilidades:</h4>
+                <ul className="probabilityList">
+                  {Object.entries(resultado.probabilidades).map(([clase, prob]) => (
+                    <li key={clase} className="probabilityItem">
+                      {clase}: {prob.toFixed()}%
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
