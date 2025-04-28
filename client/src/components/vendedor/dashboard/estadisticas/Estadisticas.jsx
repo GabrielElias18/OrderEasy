@@ -3,7 +3,7 @@ import { Bar, Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import { getVentas } from '../../../../services/ventaService';
 import { getEgresos } from '../../../../services/egresoService';
-import './Estadisticas.css'
+import './Estadisticas.css';
 
 function Estadisticas() {
   const [ventas, setVentas] = useState([]);
@@ -56,53 +56,45 @@ function Estadisticas() {
   // 🔹 Calcular balance mensual cuando cambie `selectedYear`
   useEffect(() => {
     if (!selectedYear) return;
-  
-  
+
     const ingresosPorMes = {};
     const egresosPorMes = {};
-  
+
     // Procesar ventas
     ventas.forEach(venta => {
       if (!venta.createdAt) return;
       const fecha = new Date(venta.createdAt);
       const year = fecha.getFullYear();
       const mes = `${year}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
-  
-  
+
       if (year === parseInt(selectedYear)) {
         ingresosPorMes[mes] = (ingresosPorMes[mes] || 0) + Number(venta.total || 0);
       }
     });
-  
+
     // Procesar egresos
     egresos.forEach(egreso => {
       if (!egreso.createdAt) return;
       const fecha = new Date(egreso.createdAt);
       const year = fecha.getFullYear();
       const mes = `${year}-${String(fecha.getMonth() + 1).padStart(2, '0')}`;
-    
-    
+
       if (year === parseInt(selectedYear)) {
         egresosPorMes[mes] = (egresosPorMes[mes] || 0) + Number(egreso.total || 0);
       }
     });
-  
 
-  
-    // Generar meses del año completo, incluso si no hay transacciones
+    // Generar meses del año completo
     const allMonths = Array.from({ length: 12 }, (_, i) => {
       const mes = String(i + 1).padStart(2, '0');
       return `${selectedYear}-${mes}`;
     });
-  
-  
+
     // Calcular balance mensual
     const balanceMensual = allMonths.map(mes =>
       (Number(ingresosPorMes[mes]) || 0) - (Number(egresosPorMes[mes]) || 0)
     );
-    
-  
-  
+
     setMonthlyBalanceData({
       labels: allMonths,
       datasets: [
@@ -119,13 +111,18 @@ function Estadisticas() {
         },
       ],
     });
-  }, [selectedYear, ventas, egresos]); // Se recalcula cuando cambian estos valores
+  }, [selectedYear, ventas, egresos]);
 
-  // 🔹 Procesar TOP 10 productos más vendidos
+  // 🔹 Procesar TOP 15 productos más vendidos filtrados por año
   useEffect(() => {
-    if (ventas.length === 0) return;
+    if (ventas.length === 0 || !selectedYear) return;
 
-    const unidadesVendidasPorProducto = ventas.reduce((acc, venta) => {
+    const ventasFiltradas = ventas.filter(venta => {
+      const fecha = new Date(venta.createdAt);
+      return fecha.getFullYear() === parseInt(selectedYear);
+    });
+
+    const unidadesVendidasPorProducto = ventasFiltradas.reduce((acc, venta) => {
       acc[venta.productoNombre] = (acc[venta.productoNombre] || 0) + venta.cantidad;
       return acc;
     }, {});
@@ -138,16 +135,16 @@ function Estadisticas() {
       labels: sortedProducts.map(([nombre]) => nombre),
       datasets: [
         {
-          label: 'Cantidad de Unidades Vendidas',
+          label: `Cantidad de Unidades Vendidas en ${selectedYear}`,
           data: sortedProducts.map(([, cantidad]) => cantidad),
-          backgroundColor: sortedProducts.map(
-            () => `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
+          backgroundColor: sortedProducts.map(() =>
+            `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`
           ),
           borderWidth: 1,
         },
       ],
     });
-  }, [ventas]);
+  }, [ventas, selectedYear]);
 
   if (!topProductSalesData || !monthlyBalanceData) {
     return <p>Cargando datos...</p>;
@@ -163,38 +160,48 @@ function Estadisticas() {
           ))}
         </select>
 
-        <Line data={monthlyBalanceData} options={{
-          scales: {
-            y: {
-              beginAtZero: false,
-              suggestedMin: Math.min(...monthlyBalanceData.datasets[0].data) - 1000,
-              suggestedMax: Math.max(...monthlyBalanceData.datasets[0].data) + 1000,
-            },
-          },
-          plugins: {
-            tooltip: {
-              position: 'nearest',
-              callbacks: {
-                label: (context) => `Balance: ${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(context.raw)}`,
+        <Line
+          data={monthlyBalanceData}
+          options={{
+            scales: {
+              y: {
+                beginAtZero: false,
+                suggestedMin: Math.min(...monthlyBalanceData.datasets[0].data) - 1000,
+                suggestedMax: Math.max(...monthlyBalanceData.datasets[0].data) + 1000,
               },
             },
-          },
-        }} />
+            plugins: {
+              tooltip: {
+                position: 'nearest',
+                callbacks: {
+                  label: (context) =>
+                    `Balance: ${new Intl.NumberFormat('es-CO', {
+                      style: 'currency',
+                      currency: 'COP',
+                    }).format(context.raw)}`,
+                },
+              },
+            },
+          }}
+        />
       </div>
 
       <div className="chartContainer">
         <h2>TOP 15 PRODUCTOS MÁS VENDIDOS</h2>
-        <Bar data={topProductSalesData} options={{
-          indexAxis: 'y',
-          plugins: {
-            tooltip: {
-              position: 'nearest',
-              callbacks: {
-                label: (context) => `Unidades: ${context.raw}`,
+        <Bar
+          data={topProductSalesData}
+          options={{
+            indexAxis: 'y',
+            plugins: {
+              tooltip: {
+                position: 'nearest',
+                callbacks: {
+                  label: (context) => `Unidades: ${context.raw}`,
+                },
               },
             },
-          },
-        }} />
+          }}
+        />
       </div>
     </div>
   );
