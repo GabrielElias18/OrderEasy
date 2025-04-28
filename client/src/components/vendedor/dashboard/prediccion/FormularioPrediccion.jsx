@@ -22,6 +22,32 @@ const FormularioPrediccion = () => {
   <SelectProducto productos={productos} onChange={handleSeleccionProducto} />
 
   <div className="formGrid">
+
+  <div>
+      <label className="label" htmlFor="categoria">Categoría</label>
+      <input
+        className="input"
+        type="text"
+        name="categoria"
+        id="categoria"
+        value={formulario.categoria || ''}  // Mostramos la categoría seleccionada
+        readOnly
+      />
+    </div>
+
+    <div>
+      <label className="label" htmlFor="precioCompra">Precio de compra</label>
+      <input
+        className="input"
+        type="number"
+        name="precioCompra"
+        id="precioCompra"
+        value={formulario.precioCompra}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    
     <div>
       <label className="label" htmlFor="precioVenta">Precio de venta</label>
       <input
@@ -73,6 +99,9 @@ const FormularioPrediccion = () => {
         required
       />
     </div>
+
+   
+                
   </div>
 
   <button className="button" type="submit">

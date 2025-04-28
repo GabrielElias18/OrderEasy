@@ -30,29 +30,32 @@ export const useFormularioPrediccion = () => {
   const handleSeleccionProducto = async (e) => {
     const producto = JSON.parse(e.target.value);
     setProductoSeleccionado(producto);
-
+  
     const fechaActual = new Date();
     const fechaIngreso = new Date(producto.createdat);
     const tiempoEnInventario = Math.floor((fechaActual - fechaIngreso) / (1000 * 60 * 60 * 24));
-
+  
     try {
       const token = localStorage.getItem("token");
       const ventas = await getVentas(token);
-
+  
       const ventasProducto = ventas.filter(v => v.productoNombre === producto.nombre);
       const historicoVentas = ventasProducto.reduce((acc, v) => acc + (v.cantidad || 0), 0);
-
-      setFormulario({
-        ...formulario,
+  
+      setFormulario((prevFormulario) => ({
+        ...prevFormulario,
         precioVenta: producto.precioVenta || '',
+        precioCompra: producto.precioCompra || '', // ✅ AÑADIDO
         cantidadDisponible: producto.cantidadDisponible || '',
         tiempo_en_mercado: tiempoEnInventario || '',
         historico_ventas: historicoVentas || '',
-      });
+        categoria: producto.categoriaNombre || '',       // ✅ AÑADIDO
+      }));
     } catch (error) {
       console.error('Error al procesar ventas:', error);
     }
   };
+  
 
   const handleChange = (e) => {
     setFormulario({
