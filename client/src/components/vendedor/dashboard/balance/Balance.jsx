@@ -70,16 +70,6 @@ function Balance({ token }) {
       </div>
 
       <div className="metrics-grid">
-        <div className="metric-card total-balance">
-          <div className="metric-icon">
-            <DollarSign size={32} />
-          </div>
-          <div className="metric-content">
-            <h3>Balance General</h3>
-            <p className="metric-value">{formatoMoneda(ingresosTotales - egresosTotales)}</p>
-          </div>
-        </div>
-
         <div className="metric-card income">
           <div className="metric-icon">
             <TrendingUp size={24} />
@@ -99,7 +89,19 @@ function Balance({ token }) {
             <p className="metric-value">{formatoMoneda(egresosTotales)}</p>
           </div>
         </div>
+
+        <div className="metric-card total-balance">
+          <div className="metric-icon">
+            <DollarSign size={24} />
+          </div>
+          <div className="metric-content">
+            <h3>Balance General</h3>
+            <p className="metric-value">{formatoMoneda(ingresosTotales - egresosTotales)}</p>
+          </div>
+        </div>
       </div>
+
+      
 
       <div className="tab-controls">
         <button

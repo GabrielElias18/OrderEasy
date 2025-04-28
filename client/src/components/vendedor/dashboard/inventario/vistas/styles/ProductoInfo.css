@@ -11,7 +11,7 @@
   justify-content: center;
   z-index: 1000;
   padding: 1rem;
-  animation: fadeIn 0.3s ease-in-out; /* Animación de entrada */
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .modal-content {
@@ -19,14 +19,16 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width: 900px; /* Se aumentó el ancho */
+  max-width: 900px;
   position: relative;
   padding: 2.5rem;
   transform: scale(0.9);
-  animation: modalEnter 0.3s ease-in-out forwards; /* Animación de entrada */
+  animation: modalEnter 0.3s ease-in-out forwards;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
-/* Animación al abrir el modal */
+/* Animations */
 @keyframes modalEnter {
   from {
     transform: scale(0.9);
@@ -38,7 +40,6 @@
   }
 }
 
-/* Animación al cerrar el modal */
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -50,7 +51,6 @@
   }
 }
 
-/* Animación del fondo */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -63,7 +63,7 @@
 /* Header and Close Button */
 .modal-content h2 {
   color: #333;
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
   font-weight: 600;
   margin: 0 0 1.5rem 0;
   padding-bottom: 1rem;
@@ -82,6 +82,7 @@
   padding: 0.5rem;
   border-radius: 4px;
   transition: all 0.2s;
+  z-index: 2;
 }
 
 .detalle-cerrar:hover {
@@ -94,13 +95,12 @@
   text-align: center;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: #f8f8f8;
   border-radius: 8px;
 }
 
 .detalle-imagen {
   max-width: 100%;
-  max-height: 240px;
+  max-height: min(240px, 50vh);
   object-fit: contain;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .detalle-titulo {
-  font-size: 1.25rem;
+  font-size: clamp(1.1rem, 3vw, 1.25rem);
   font-weight: 600;
   color: #333;
   margin-bottom: 1rem;
@@ -143,6 +143,7 @@
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid #eee;
+  flex-wrap: wrap;
 }
 
 .detalle-editar-btn,
@@ -152,6 +153,8 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
+  min-width: 120px;
+  text-align: center;
 }
 
 .detalle-editar-btn {
@@ -204,12 +207,16 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0;
+  }
+
   .modal-content {
-    margin: 0;
+    width: 100%;
     height: 100vh;
     border-radius: 0;
-    overflow-y: auto;
-
+    padding: 1.5rem;
+    margin: 0;
   }
 
   .detalle-info p {
@@ -220,6 +227,40 @@
 
   .detalle-info p strong {
     flex: none;
+  }
+
+  .detalle-acciones {
+    justify-content: stretch;
+  }
+
+  .detalle-editar-btn,
+  .detalle-eliminar-btn {
+    flex: 1;
+  }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .detalle-cerrar {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .detalle-imagen-container {
+    padding: 0.5rem;
+  }
+
+  .detalle-acciones {
+    flex-direction: column;
+  }
+
+  .detalle-editar-btn,
+  .detalle-eliminar-btn {
+    width: 100%;
   }
 }
 
