@@ -109,7 +109,12 @@
 
 .formulario-contenedor {
   width: 100%;
-  max-width: 480px;
+  max-width: 600px; /* límite para que no se vea tan estirado en pantallas grandes */
+  padding: 2rem;
+  background-color: #f9f9f9; /* Fondo gris muy suave */
+  border: none; /* Quitamos el borde negro duro */
+  border-radius: 5%; /* Esquinas más agradables */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10); /* Sombra sutil */
 }
 
 .encabezado {
