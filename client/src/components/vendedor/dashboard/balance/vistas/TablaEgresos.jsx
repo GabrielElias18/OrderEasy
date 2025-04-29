@@ -6,8 +6,10 @@ import { getEgresos, deleteEgreso, updateEgreso } from "../../../../../services/
 const TablaEgresos = ({ actualizarBalance }) => {
   const [egresos, setEgresos] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 50;
+  const registrosPorPagina = 15;
   const [editingEgreso, setEditingEgreso] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     fetchEgresos();
@@ -19,8 +21,16 @@ const TablaEgresos = ({ actualizarBalance }) => {
       const data = await getEgresos(token);
       setEgresos(data);
     } catch (error) {
-      console.error("Error al obtener los egresos:", error.mensaje);
+      console.error("Error al obtener los egresos:", error);
     }
+  };
+
+  const formatearFecha = (fecha) => {
+    const d = new Date(fecha);
+    const mes = (d.getMonth() + 1).toString().padStart(2, '0');
+    const dia = d.getDate().toString().padStart(2, '0');
+    const anio = d.getFullYear();
+    return `${mes}/${dia}/${anio}`;
   };
 
   const handleEditar = (egreso) => {
@@ -41,7 +51,7 @@ const TablaEgresos = ({ actualizarBalance }) => {
           <textarea 
             id="descripcion" 
             class="swal2-textarea"
-          >${egreso.descripcion}</textarea>
+          >${egreso.descripcion ?? ''}</textarea>
         </div>
       `,
       showCancelButton: true,
@@ -69,14 +79,12 @@ const TablaEgresos = ({ actualizarBalance }) => {
           
           await updateEgreso(egreso.egresoid, updatedData, token);
           
-          // Update local state
           setEgresos(egresos.map(e => 
             e.egresoid === egreso.egresoid 
               ? { ...e, ...updatedData }
               : e
           ));
 
-          // Actualizar el balance general
           actualizarBalance();
 
           Swal.fire({
@@ -92,7 +100,7 @@ const TablaEgresos = ({ actualizarBalance }) => {
             text: 'No se pudo actualizar el egreso',
             icon: 'error'
           });
-          console.error("Error al actualizar el egreso:", error.mensaje);
+          console.error("Error al actualizar el egreso:", error);
         }
       }
     });
@@ -120,7 +128,6 @@ const TablaEgresos = ({ actualizarBalance }) => {
           await deleteEgreso(egresoid, token);
           setEgresos(egresos.filter((egreso) => egreso.egresoid !== egresoid));
 
-          // Actualizar el balance general
           actualizarBalance();
 
           Swal.fire({
@@ -136,22 +143,58 @@ const TablaEgresos = ({ actualizarBalance }) => {
             text: "No se pudo eliminar el egreso.",
             icon: "error"
           });
-          console.error("Error al eliminar el egreso:", error.mensaje);
+          console.error("Error al eliminar el egreso:", error);
         }
       }
     });
   };
 
-  // ... resto del código permanece igual ...
+  const egresosFiltrados = egresos.filter((egreso) => {
+    const productoNombre = egreso.productoNombre ?? '';
+    const descripcion = egreso.descripcion ?? '';
+  
+    const coincideBusqueda = 
+      productoNombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+  
+    // Convertir la fecha del egreso al formato YYYY-MM-DD para comparación segura
+    const fecha = new Date(egreso.createdAt);
+    const yyyy = fecha.getFullYear();
+    const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+    const dd = String(fecha.getDate()).padStart(2, '0');
+    const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+  
+    const coincideFecha = selectedDate 
+      ? fechaFormateada === selectedDate
+      : true;
+  
+    return coincideBusqueda && coincideFecha;
+  });
+  
 
   const indiceInicial = (paginaActual - 1) * registrosPorPagina;
   const indiceFinal = indiceInicial + registrosPorPagina;
-  const egresosPaginados = egresos.slice(indiceInicial, indiceFinal);
-  const totalPaginas = Math.ceil(egresos.length / registrosPorPagina);
+  const egresosPaginados = egresosFiltrados.slice(indiceInicial, indiceFinal);
+  const totalPaginas = Math.ceil(egresosFiltrados.length / registrosPorPagina);
 
   return (
     <div className="tabla-container">
       <h3>Egresos</h3>
+      <div className="filters-container">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="filter-input"
+        />
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="filter-input"
+        />
+      </div>
       <table className="tabla-productos">
         <thead>
           <tr>
@@ -167,9 +210,9 @@ const TablaEgresos = ({ actualizarBalance }) => {
           {egresosPaginados.length > 0 ? (
             egresosPaginados.map((egreso) => (
               <tr key={egreso.egresoid}>
-                <td>{new Date(egreso.createdAt).toLocaleDateString()}</td>
-                <td>{egreso.productoNombre}</td>
-                <td>{egreso.descripcion}</td>
+                <td>{formatearFecha(egreso.createdAt)}</td>
+                <td>{egreso.productoNombre ?? 'N/A'}</td>
+                <td>{egreso.descripcion ?? 'Sin descripción'}</td>
                 <td>{egreso.cantidad}</td>
                 <td>
                   ${Number(egreso.total).toLocaleString("es-CO", {})}

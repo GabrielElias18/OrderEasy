@@ -15,6 +15,9 @@ function Balance({ token }) {
   const [ingresosTotales, setIngresosTotales] = useState(0);
   const [egresosTotales, setEgresosTotales] = useState(0);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+
   const fetchDatos = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -101,7 +104,6 @@ function Balance({ token }) {
         </div>
       </div>
 
-      
 
       <div className="tab-controls">
         <button
@@ -122,9 +124,17 @@ function Balance({ token }) {
 
       <div className="table-container">
         {mostrarTabla === "ingresos" ? (
-          <TablaIngresos actualizarBalance={fetchDatos} />
+          <TablaIngresos
+            actualizarBalance={fetchDatos}
+            searchTerm={searchTerm}
+            selectedDate={selectedDate}
+          />
         ) : (
-          <TablaEgresos actualizarBalance={fetchDatos} />
+          <TablaEgresos
+            actualizarBalance={fetchDatos}
+            searchTerm={searchTerm}
+            selectedDate={selectedDate}
+          />
         )}
       </div>
 

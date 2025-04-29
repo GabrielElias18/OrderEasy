@@ -6,8 +6,10 @@ import { getVentas, deleteVenta, updateVenta } from "../../../../../services/ven
 const TablaIngresos = ({ actualizarBalance }) => {
   const [ventas, setVentas] = useState([]);
   const [paginaActual, setPaginaActual] = useState(1);
-  const registrosPorPagina = 50;
+  const registrosPorPagina = 15;
   const [editingVenta, setEditingVenta] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
 
   useEffect(() => {
     fetchVentas();
@@ -19,8 +21,16 @@ const TablaIngresos = ({ actualizarBalance }) => {
       const data = await getVentas(token);
       setVentas(data);
     } catch (error) {
-      console.error("Error al obtener las ventas:", error.mensaje);
+      console.error("Error al obtener las ventas:", error);
     }
+  };
+
+  const formatearFecha = (fecha) => {
+    const d = new Date(fecha);
+    const mes = (d.getMonth() + 1).toString().padStart(2, '0');
+    const dia = d.getDate().toString().padStart(2, '0');
+    const anio = d.getFullYear();
+    return `${mes}/${dia}/${anio}`;
   };
 
   const handleEditar = (venta) => {
@@ -50,33 +60,33 @@ const TablaIngresos = ({ actualizarBalance }) => {
       preConfirm: () => {
         const cantidad = document.getElementById('cantidad').value;
         const descripcion = document.getElementById('descripcion').value;
-        
+
         if (!cantidad || cantidad < 1) {
           Swal.showValidationMessage('La cantidad debe ser mayor a 0');
           return false;
         }
-        
+
         return { cantidad: parseInt(cantidad), descripcion };
       }
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const token = localStorage.getItem("token");
+          const precioUnitario = venta.total / venta.cantidad;
           const updatedData = {
             cantidad: result.value.cantidad,
-            descripcion: result.value.descripcion
+            descripcion: result.value.descripcion,
+            total: precioUnitario * result.value.cantidad
           };
-          
+
           await updateVenta(venta.ventaid, updatedData, token);
-          
-          // Update local state
+
           setVentas(ventas.map(v => 
-            v.ventaid === venta.ventaid 
+            v.ventaid === venta.ventaid
               ? { ...v, ...updatedData }
               : v
           ));
 
-          // Actualizar el balance general
           actualizarBalance();
 
           Swal.fire({
@@ -92,7 +102,7 @@ const TablaIngresos = ({ actualizarBalance }) => {
             text: 'No se pudo actualizar la venta',
             icon: 'error'
           });
-          console.error("Error al actualizar la venta:", error.mensaje);
+          console.error("Error al actualizar la venta:", error);
         }
       }
     });
@@ -120,7 +130,6 @@ const TablaIngresos = ({ actualizarBalance }) => {
           await deleteVenta(ventaid, token);
           setVentas(ventas.filter((venta) => venta.ventaid !== ventaid));
 
-          // Actualizar el balance general
           actualizarBalance();
 
           Swal.fire({
@@ -136,22 +145,55 @@ const TablaIngresos = ({ actualizarBalance }) => {
             text: "No se pudo eliminar la venta.",
             icon: "error"
           });
-          console.error("Error al eliminar la venta:", error.mensaje);
+          console.error("Error al eliminar la venta:", error);
         }
       }
     });
   };
 
-  // ... resto del código permanece igual ...
-
+  const ventasFiltradas = ventas.filter((venta) => {
+    const coincideBusqueda = 
+      venta.productoNombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      venta.descripcion?.toLowerCase().includes(searchTerm.toLowerCase());
+  
+    // Obtener la fecha local en formato YYYY-MM-DD (para comparar con el input date)
+    const fechaVentaLocal = new Date(venta.createdAt);
+    const yyyy = fechaVentaLocal.getFullYear();
+    const mm = String(fechaVentaLocal.getMonth() + 1).padStart(2, '0');
+    const dd = String(fechaVentaLocal.getDate()).padStart(2, '0');
+    const fechaFormateada = `${yyyy}-${mm}-${dd}`;
+  
+    const coincideFecha = selectedDate 
+      ? fechaFormateada === selectedDate
+      : true;
+  
+    return coincideBusqueda && coincideFecha;
+  });
+  
+  
   const indiceInicial = (paginaActual - 1) * registrosPorPagina;
   const indiceFinal = indiceInicial + registrosPorPagina;
-  const ventasPaginadas = ventas.slice(indiceInicial, indiceFinal);
-  const totalPaginas = Math.ceil(ventas.length / registrosPorPagina);
+  const ventasPaginadas = ventasFiltradas.slice(indiceInicial, indiceFinal);
+  const totalPaginas = Math.ceil(ventasFiltradas.length / registrosPorPagina);
 
   return (
     <div className="tabla-container">
       <h3>Ingresos</h3>
+      <div className="filters-container">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="filter-input"
+        />
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="filter-input"
+        />
+      </div>
       <table className="tabla-productos">
         <thead>
           <tr>
@@ -167,7 +209,7 @@ const TablaIngresos = ({ actualizarBalance }) => {
           {ventasPaginadas.length > 0 ? (
             ventasPaginadas.map((venta) => (
               <tr key={venta.ventaid}>
-                <td>{new Date(venta.createdAt).toLocaleDateString()}</td>
+                <td>{formatearFecha(venta.createdAt)}</td>
                 <td>{venta.productoNombre}</td>
                 <td>{venta.descripcion}</td>
                 <td>{venta.cantidad}</td>

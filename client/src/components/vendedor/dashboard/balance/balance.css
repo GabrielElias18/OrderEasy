@@ -82,6 +82,19 @@
 .total-balance {
   background: white;
 }
+.filters-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.filter-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 48%;
+  font-size: 14px;
+}
 
 .metric-icon {
   display: flex;
@@ -175,9 +188,7 @@
   max-width: 1400px;
   margin: 0 auto;
   background: white;
-  border-radius: 1rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow-x: auto;
 }
 

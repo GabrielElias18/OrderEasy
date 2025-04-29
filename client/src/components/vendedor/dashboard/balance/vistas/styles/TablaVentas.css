@@ -5,14 +5,14 @@
   overflow: hidden;
   margin: 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 1200px;
+  max-width: 1400px;
   width: 100%;
 }
 
 .tabla-container h3 {
   padding: 1.25rem;
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   color: #111827;
   font-weight: 600;
   border-bottom: 1px solid #e5e7eb;
@@ -31,7 +31,7 @@
   text-align: left;
   padding: 1rem 1.25rem;
   border-bottom: 1px solid #e5e7eb;
-  font-size: 0.875rem;
+  font-size: 1.03rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -40,7 +40,7 @@
   padding: 1rem 1.25rem;
   color: #374151;
   border-bottom: 1px solid #e5e7eb;
-  font-size: 0.875rem;
+  font-size: 1.05rem;
 }
 
 .tabla-productos tr:hover {
@@ -64,7 +64,7 @@
   margin: 0 0.25rem;
   transition: all 0.2s ease-in-out;
   background: transparent;
-  font-size: 1rem;
+  font-size: 1.01rem;
 }
 
 .editar-venta {
