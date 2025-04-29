@@ -88,6 +88,7 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
       }
 
       const ventaData = {
+        productoid: productoIdSeleccionado.productoId,
         productoNombre: productoSeleccionado.nombre,
         cantidad: Number(data.cantidad),
         descripcion: data.descripcion || "",
