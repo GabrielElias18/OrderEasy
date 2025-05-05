@@ -14,7 +14,7 @@ const generarToken = (usuario) => {
       rol: usuario.rol  // 🔹 Asegúrate de incluir el rol en el token
     },
     'clave_secreta',  // Usa una clave segura en producción
-    { expiresIn: '1h' }
+    { expiresIn: '3h' }
   );
 };
 
