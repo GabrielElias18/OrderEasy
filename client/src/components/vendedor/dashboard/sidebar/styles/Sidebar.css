@@ -5,7 +5,7 @@
   background-color: white;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e5e7eb;
+  border-right: 1px solid #e0e0e0; /* Gris claro */
   position: fixed;
   left: 0;
   top: 0;
@@ -16,7 +16,7 @@
 /* Logo Section */
 .logo-container {
   padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e0e0e0; /* Gris claro */
   background-color: white;
 }
 
@@ -29,13 +29,13 @@
 .logo-icon {
   width: 28px;
   height: 28px;
-  color: #2563eb;
+  color: #1565C0; /* Azul principal */
 }
 
 .logo-text {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2563eb;
+  color: #1565C0; /* Azul principal */
   letter-spacing: -0.025em;
 }
 
@@ -49,7 +49,7 @@
 .menu-title {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #6b7280;
+  color: #4b5563; /* Gris oscuro, más neutro que el café */
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 1rem;
@@ -66,7 +66,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  color: #4b5563;
+  color: #4b5563; /* Gris oscuro - Neutral */
   text-decoration: none;
   border-radius: 0.5rem;
   transition: all 0.2s ease-in-out;
@@ -74,13 +74,13 @@
 }
 
 .menu-item:hover {
-  background-color: #f3f4f6;
-  color: #2563eb;
+  background-color: #f0f4fa; /* Fondo claro */
+  color: #1565C0; /* Azul principal */
 }
 
 .menu-item.active {
-  background-color: #eff6ff;
-  color: #2563eb;
+  background-color: #eff6ff; /* Azul claro */
+  color: #1565C0; /* Azul principal */
 }
 
 .menu-icon {
@@ -91,7 +91,7 @@
 /* Logout Section */
 .logout-container {
   padding: 1.25rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #e0e0e0; /* Gris claro */
 }
 
 .logout-button {
@@ -99,7 +99,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  color: #ef4444;
+  color: #d63031; /* Rojo */
   background: transparent;
   border: none;
   border-radius: 0.5rem;
@@ -110,7 +110,7 @@
 }
 
 .logout-button:hover {
-  background-color: #fef2f2;
+  background-color: #fef2f2; /* Fondo suave */
 }
 
 /* Mobile Menu Toggle */
@@ -122,7 +122,7 @@
   z-index: 60;
   padding: 0.5rem;
   background-color: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid #e0e0e0; /* Gris claro */
   border-radius: 0.5rem;
   cursor: pointer;
 }

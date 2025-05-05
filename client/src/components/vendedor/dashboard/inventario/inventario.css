@@ -3,7 +3,7 @@
   display: flex; /* Usa flexbox para centrar el contenido */
   flex-direction: column;
   align-items: center;
-  background-color: #f8f8f8;
+  background-color: #F0F4FA; /* Fondo claro */
   min-height: 100vh; /* Asegura que ocupe toda la pantalla */
   padding: 1.5rem;
 }
@@ -48,31 +48,31 @@
   cursor: pointer;
 }
 
-/* Botón primario con color marrón */
+/* Botón primario con color azul */
 .inventario-btn-primary {
-  background-color: #8B4513;
+  background-color: #1565C0; /* Azul principal */
   color: white;
 }
 
 .inventario-btn-primary:hover {
-  background-color: #6b3410;
+  background-color: #0D47A1; /* Azul oscuro */
 }
 
-/* Botón secundario con color oscuro */
+/* Botón secundario con color gris oscuro */
 .inventario-btn-secondary {
-  background-color: #2d2d2d;
+  background-color: #2C2C2C; /* Gris oscuro */
   color: white;
 }
 
 .inventario-btn-secondary:hover {
-  background-color: #1a1a1a;
+  background-color: #1A1A1A; /* Gris más oscuro */
 }
 
 /* Estilo para los selects */
 .inventario-select {
   padding: 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid #e2e2e2;
+  border: 1px solid #E0E0E0; /* Gris claro */
   background-color: white;
   min-width: 200px;
   font-size: 0.95rem;
@@ -85,7 +85,7 @@
   width: 100%;
   max-width: 1400px;
   padding: 1rem 0;
-  background-color: #f8f8f8;
+  background-color: #F0F4FA; /* Fondo claro */
   z-index: 10;
 }
 
@@ -94,14 +94,14 @@
   width: 100%;
   padding: 1rem;
   border-radius: 0.5rem;
-  border: 2px solid #e2e2e2;
+  border: 2px solid #E0E0E0; /* Gris claro */
   font-size: 1rem;
   transition: border-color 0.2s ease;
 }
 
 .inventario-search-input:focus {
   outline: none;
-  border-color: #8B4513;
+  border-color: #1565C0; /* Azul principal */
 }
 
 /* Contenedor de productos centrado */

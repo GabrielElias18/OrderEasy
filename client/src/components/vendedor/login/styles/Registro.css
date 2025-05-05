@@ -2,7 +2,7 @@
 
 .registro-container {
   min-height: 100vh;
-  background-color: #f8f6f4;
+  background-color: #F0F4FA; /* Fondo claro principal */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
   min-height: 100vh;
   background: white;
   display: flex;
-  box-shadow: 0 20px 40px rgba(139, 69, 19, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 /* Sección de Imagen */
@@ -34,7 +34,7 @@
 .imagen-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(139, 69, 19, 0.9), rgba(101, 67, 33, 0.9));
+  background: linear-gradient(135deg, rgba(21, 101, 192, 0.9), rgba(79, 195, 247, 0.9)); /* Azul principal */
   z-index: 1;
 }
 
@@ -73,7 +73,7 @@
 /* Sección de Formulario */
 .formulario-seccion {
   flex: 1;
-  background-color: white;
+  background-color: #F7F9FC; /* Fondo claro */
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -102,17 +102,17 @@
 .logo .icono {
   width: 32px;
   height: 32px;
-  color: #8B4513;
+  color: #1565C0; /* Azul principal */
 }
 
 .logo span {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #8B4513;
+  color: #1565C0; /* Azul principal */
 }
 
 .encabezado h2 {
-  color: #1a1a1a;
+  color: #2C2C2C; /* Texto oscuro */
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -131,7 +131,7 @@
 
 .input-grupo label {
   display: block;
-  color: #4a4a4a;
+  color: #4a4a4a; /* Gris oscuro */
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
@@ -140,7 +140,7 @@
 .input-grupo input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #DDE2E8; /* Gris suave */
   background-color: white;
   font-size: 0.875rem;
   transition: all 0.2s;
@@ -148,19 +148,19 @@
 
 .input-grupo input:focus {
   outline: none;
-  border-color: #8B4513;
-  box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+  border-color: #1565C0; /* Azul principal */
+  box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
 }
 
 .input-grupo input::placeholder {
-  color: #9ca3af;
+  color: #A5B4C5; /* Gris suave */
 }
 
 /* Botones */
 .boton-submit {
   width: 100%;
   padding: 0.875rem;
-  background-color: #8B4513;
+  background-color: #1565C0; /* Azul principal */
   color: white;
   border: none;
   font-weight: 600;
@@ -171,12 +171,12 @@
 }
 
 .boton-submit:hover {
-  background-color: #6B3410;
+  background-color: #0d47a1; /* Azul oscuro */
   transform: translateY(-1px);
 }
 
 .boton-submit:disabled {
-  background-color: #d1b8a8;
+  background-color: #A5B4C5; /* Gris suave */
   cursor: not-allowed;
   transform: none;
 }
@@ -189,14 +189,14 @@
 .boton-volver {
   background: none;
   border: none;
-  color: #8B4513;
+  color: #1565C0; /* Azul principal */
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .boton-volver:hover {
-  color: #6B3410;
+  color: #0d47a1; /* Azul oscuro */
   text-decoration: underline;
 }
 
@@ -229,15 +229,6 @@
   }
 }
 
-  .boton-home {
-    padding: 0.5rem;
-  }
-
-  .boton-home span {
-    display: none;
-  }
-
-
 /* Botón Home */
 .boton-home {
   position: fixed;
@@ -248,9 +239,9 @@
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   background-color: white;
-  border: 1px solid #8B4513;
+  border: 1px solid #1565C0; /* Azul principal */
   border-radius: 12px;
-  color: #8B4513;
+  color: #1565C0; /* Azul principal */
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -258,7 +249,7 @@
 }
 
 .boton-home:hover {
-  background-color: #8B4513;
+  background-color: #1565C0; /* Azul principal */
   color: white;
 }
 
