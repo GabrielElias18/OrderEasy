@@ -12,6 +12,24 @@
   z-index: 50;
   transition: transform 0.3s ease-in-out;
 }
+.custom-logo {
+  width: 160px;
+  margin: 0 auto;
+  display: block;
+}
+
+.menu-item:hover,
+.menu-item:hover * {
+  color: #1565C0 !important;
+}
+.menu-item:hover {
+  background-color: #f0f4fa;
+}
+.menu-item.active,
+.menu-item.active * {
+  color: #1565C0 !important;
+}
+
 
 /* Logo Section */
 .logo-container {
@@ -92,6 +110,17 @@
 .logout-container {
   padding: 1.25rem;
   border-top: 1px solid #e0e0e0; /* Gris claro */
+}
+
+.logout-button,
+.logout-button * {
+  color: #d63031 !important;
+}
+
+.logout-button:hover,
+.logout-button:hover * {
+  background-color: #fef2f2;
+  color: #d63031 !important;
 }
 
 .logout-button {

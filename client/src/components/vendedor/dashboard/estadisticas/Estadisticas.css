@@ -4,6 +4,13 @@
   flex-direction: column; /* Apilar las gráficas en vertical */
   align-items: center; /* Centrar las gráficas */
   gap: 2rem; /* Espacio entre las gráficas */
+  display: flex; /* Usa flexbox para centrar el contenido */
+  flex-direction: column;
+  align-items: center;
+  background-color: #F0F4FA; /* Fondo claro */
+  min-height: 100vh; /* Asegura que ocupe toda la pantalla */
+  padding: 1.5rem;
+  border-radius: 5px;
 }
 
 /* Chart Container */

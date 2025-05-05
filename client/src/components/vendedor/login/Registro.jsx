@@ -4,6 +4,7 @@ import { Package, Home } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { registerUser } from '../../../services/authServices';
 import './styles/Registro.css';
+import logo from './LoginAssets/logo.png'
 
 function Registro() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function Registro() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!validarEmail(formData.correo)) {
       Swal.fire({
         icon: 'error',
@@ -43,7 +44,7 @@ function Registro() {
       });
       return;
     }
-  
+
     if (formData.password !== formData.confirmPassword) {
       Swal.fire({
         icon: 'error',
@@ -52,9 +53,9 @@ function Registro() {
       });
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
       await registerUser({
         primerNombre: formData.primerNombre,
@@ -66,7 +67,7 @@ function Registro() {
         contraseña: formData.password,
         rol: 'vendedor' // 🔹 Asegurar que se registre como vendedor
       });
-  
+
       Swal.fire({
         icon: 'success',
         title: 'Registro exitoso',
@@ -76,7 +77,7 @@ function Registro() {
         showConfirmButton: false,
         willClose: () => navigate('/login')
       });
-  
+
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -87,11 +88,11 @@ function Registro() {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <div className="registro-container">
-      <button 
+      <button
         className="boton-home"
         onClick={() => navigate('/')}
       >
@@ -102,7 +103,7 @@ function Registro() {
         {/* Sección izquierda - Imagen */}
         <div className="imagen-seccion">
           <div className="imagen-overlay" />
-          <img 
+          <img
             src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80"
             alt="Gestión de Inventario"
             className="imagen-fondo"
@@ -117,10 +118,9 @@ function Registro() {
         <div className="formulario-seccion">
           <div className="formulario-contenedor">
             <div className="encabezado">
-              <div className="logo">
-                <Package className="icono" />
-                <span>OrderEasy</span>
-              </div>
+              <button className="logo-boton" onClick={() => navigate('/')}>
+                <img src={logo} alt="Logo" className="logo-login" />
+              </button>
               <h2>Registro de Usuario</h2>
             </div>
 
@@ -237,7 +237,7 @@ function Registro() {
             </form>
 
             <div className="volver-login">
-              <button 
+              <button
                 className="boton-volver"
                 onClick={() => navigate('/login')}
               >

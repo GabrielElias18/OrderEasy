@@ -8,6 +8,13 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  display: flex; /* Usa flexbox para centrar el contenido */
+  flex-direction: column;
+  align-items: center;
+  background-color: #F0F4FA; /* Fondo claro */
+  min-height: 100vh; /* Asegura que ocupe toda la pantalla */
+  padding: 1.5rem;
+  border-radius: 5px;
 }
 
 /* Top Action Buttons */

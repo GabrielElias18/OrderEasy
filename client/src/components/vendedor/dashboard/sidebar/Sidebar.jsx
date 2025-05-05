@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Package, 
-  LineChart, 
-  DollarSign, 
+import {
+  LayoutDashboard,
+  Package,
+  LineChart,
+  DollarSign,
   LogOut,
   Menu,
   Lightbulb,
-  X 
+  X
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import './styles/Sidebar.css';
+import logo from '../../login/LoginAssets/logo.png'; // Asegúrate de que la ruta es correcta
+
 
 function Sidebar() {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ function Sidebar() {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem('token');
-        
+
         Swal.fire({
           title: "Sesión cerrada",
           text: "Has cerrado sesión exitosamente.",
@@ -57,36 +59,36 @@ function Sidebar() {
 
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="logo-container">
-          <div className="logo">
-            <Package className="logo-icon" />
-            <span className="logo-text">OrderEasy</span>
-          </div>
+          <Link to="/dashboard/inicio" onClick={() => setIsOpen(false)}>
+            <img src={logo} alt="Logo" className="custom-logo" />
+          </Link>
         </div>
+
 
         <div className="menu-container">
           <nav className="menu-items">
             <h3 className="menu-title">Menú Principal</h3>
 
-            <Link 
-              to="inicio" 
+            <Link
+              to="inicio"
               className={`menu-item ${location.pathname.includes('inicio') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}
             >
               <LayoutDashboard className="menu-icon" />
               <span>Inicio</span>
-            </Link>   
+            </Link>
 
-            <Link 
-              to="inventario" 
+            <Link
+              to="inventario"
               className={`menu-item ${location.pathname.includes('inventario') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}
             >
               <Package className="menu-icon" />
               <span>Inventario</span>
             </Link>
-            
-            <Link 
-              to="balance" 
+
+            <Link
+              to="balance"
               className={`menu-item ${location.pathname.includes('balance') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}
             >
@@ -94,8 +96,8 @@ function Sidebar() {
               <span>Balance</span>
             </Link>
 
-            <Link 
-              to="estadisticas" 
+            <Link
+              to="estadisticas"
               className={`menu-item ${location.pathname.includes('estadisticas') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}
             >
@@ -103,8 +105,8 @@ function Sidebar() {
               <span>Estadísticas</span>
             </Link>
 
-            <Link 
-              to="prediccion" 
+            <Link
+              to="prediccion"
               className={`menu-item ${location.pathname.includes('prediccion') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}
             >

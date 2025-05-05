@@ -2,7 +2,7 @@
 
 .login-container {
   min-height: 100vh;
-  background-color: #F0F4FA; /* Fondo claro principal */
+  background-color: #F0F4FA;
   position: relative;
   display: flex;
   align-items: stretch;
@@ -11,10 +11,23 @@
 .login-wrapper {
   width: 100%;
   display: flex;
-  background: #F0F4FA; /* Fondo claro principal */
+  background: #F0F4FA;
 }
 
-/* Botón Home */
+.logo-login {
+  width: 160px;
+  display: block;
+  margin: 0 auto 10px;
+  cursor: pointer;
+}
+
+.logo-boton {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
 .boton-home {
   position: fixed;
   top: 2rem;
@@ -23,10 +36,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
-  background-color: #F7F9FC; /* Fondo claro */
-  border: 1px solid #1565C0; /* Azul principal */
+  background-color: #F7F9FC;
+  border: 1px solid #1565C0;
   border-radius: 12px;
-  color: #1565C0; /* Azul principal */
+  color: #1565C0;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -34,8 +47,8 @@
 }
 
 .boton-home:hover {
-  background-color: #1565C0; /* Azul principal */
-  color: #F7F9FC; /* Fondo claro */
+  background-color: #1565C0;
+  color: #F7F9FC;
 }
 
 .icono-home {
@@ -43,7 +56,6 @@
   height: 20px;
 }
 
-/* Sección de Imagen */
 .imagen-seccion {
   display: none;
   position: relative;
@@ -60,7 +72,7 @@
 .imagen-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(21, 101, 192, 0.9), rgba(79, 195, 247, 0.9)); /* Azul principal */
+  background: linear-gradient(135deg, rgba(21, 101, 192, 0.9), rgba(79, 195, 247, 0.9));
   z-index: 1;
 }
 
@@ -96,10 +108,9 @@
   opacity: 0.9;
 }
 
-/* Sección de Formulario */
 .formulario-seccion {
   flex: 1;
-  background-color: #F7F9FC; /* Fondo claro */
+  background-color: #F7F9FC;
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -111,7 +122,7 @@
   width: 100%;
   max-width: 600px;
   padding: 2rem;
-  background-color: #ffffff; /* Fondo blanco */
+  background-color: #ffffff;
   border: none;
   border-radius: 5%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
@@ -133,22 +144,21 @@
 .logo .icono {
   width: 32px;
   height: 32px;
-  color: #1565C0; /* Azul principal */
+  color: #1565C0;
 }
 
 .logo span {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1565C0; /* Azul principal */
+  color: #1565C0;
 }
 
 .encabezado h2 {
-  color: #2C2C2C; /* Texto oscuro */
+  color: #2C2C2C;
   font-size: 1.5rem;
   font-weight: 600;
 }
 
-/* Mensaje de estado */
 .mensaje {
   padding: 1rem;
   border-radius: 0.75rem;
@@ -169,14 +179,13 @@
   border: 1px solid #fee2e2;
 }
 
-/* Grupos de Inputs */
 .input-grupo {
   margin-bottom: 1.25rem;
 }
 
 .input-grupo label {
   display: block;
-  color: #2C2C2C; /* Texto oscuro */
+  color: #2C2C2C;
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
@@ -187,27 +196,26 @@
   padding: 0.75rem 1rem;
   border: 1px solid #DDE2E8;
   border-radius: 12px;
-  background-color: #ffffff; /* Fondo blanco */
+  background-color: #ffffff;
   font-size: 0.875rem;
   transition: all 0.2s;
 }
 
 .input-grupo input:focus {
   outline: none;
-  border-color: #1565C0; /* Azul principal */
+  border-color: #1565C0;
   box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.1);
 }
 
 .input-grupo input::placeholder {
-  color: #A5B4C5; /* Gris suave */
+  color: #A5B4C5;
 }
 
-/* Botones */
 .boton-submit {
   width: 100%;
   padding: 0.875rem;
-  background-color: #1565C0; /* Azul principal */
-  color: #F7F9FC; /* Fondo claro */
+  background-color: #1565C0;
+  color: #F7F9FC;
   border: none;
   border-radius: 12px;
   font-weight: 600;
@@ -218,12 +226,12 @@
 }
 
 .boton-submit:hover {
-  background-color: #0d47a1; /* Azul oscuro */
+  background-color: #0d47a1;
   transform: translateY(-1px);
 }
 
 .boton-submit:disabled {
-  background-color: #A5B4C5; /* Gris suave */
+  background-color: #A5B4C5;
   cursor: not-allowed;
   transform: none;
 }
@@ -236,18 +244,17 @@
 .boton-registro {
   background: none;
   border: none;
-  color: #4FC3F7; /* Azul claro */
+  color: #4FC3F7;
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s;
 }
 
 .boton-registro:hover {
-  color: #1565C0; /* Azul principal */
+  color: #1565C0;
   text-decoration: underline;
 }
 
-/* Responsive */
 @media (max-width: 1023px) {
   .boton-home {
     top: 1rem;

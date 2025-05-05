@@ -6,6 +6,7 @@
   background-color: #F0F4FA; /* Fondo claro */
   min-height: 100vh; /* Asegura que ocupe toda la pantalla */
   padding: 1.5rem;
+  border-radius: 5px;
 }
 
 /* Contenedor superior con botones y filtros */

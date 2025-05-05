@@ -1,3 +1,4 @@
+
 /* Base container styles */
 .container-prediccion {
   display: flex;
@@ -6,6 +7,13 @@
   font-size: 1.05rem;
   max-width: 1200px;
   margin: 0 auto;
+  display: flex; /* Usa flexbox para centrar el contenido */
+  flex-direction: column;
+  align-items: center;
+  background-color: #F0F4FA; /* Fondo claro */
+  min-height: 100vh; /* Asegura que ocupe toda la pantalla */
+  padding: 1.5rem;
+  border-radius: 5px;
 }
 
 /* Form card layout */

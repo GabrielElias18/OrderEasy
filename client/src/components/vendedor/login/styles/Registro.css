@@ -8,6 +8,21 @@
   justify-content: center;
   width: 100%;
 }
+.logo-login {
+  width: 160px;
+  display: block;
+  margin: 0 auto 10px;
+  cursor: pointer;
+}
+
+.logo-boton {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+
 
 .registro-wrapper {
   width: 100%;
