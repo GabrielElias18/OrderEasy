@@ -22,8 +22,12 @@
   border-radius: 1.25rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   position: relative;
-  overflow: hidden;
+
+  /* Agrega estas dos líneas */
+  max-height: 90vh;
+  overflow-y: auto;
 }
+
 
 /* Modal Header */
 .modal-header {
@@ -110,6 +114,7 @@
   min-height: 100px;
   resize: vertical;
 }
+
 
 .select:focus,
 .input:focus,
@@ -237,3 +242,26 @@
     width: 100%;
   }
 }   
+
+/* Animaciones de apertura y cierre */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+}
