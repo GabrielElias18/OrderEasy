@@ -14,7 +14,7 @@ const FormularioPrediccion = () => {
   } = useFormularioPrediccion();
 
   return (
-    <div className="container">
+    <div className="container-prediccion">
       <div className="formCard">
         <form className="form" onSubmit={enviarDatos}>
           <h2 className="title">Formulario de Predicción de Demanda</h2>
