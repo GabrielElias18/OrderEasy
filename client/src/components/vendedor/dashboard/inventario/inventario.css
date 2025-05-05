@@ -175,3 +175,40 @@
     width: 250px;
   }
 }
+
+/* Estilos de paginación */
+.paginacion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.paginacion-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #E0E0E0; /* Borde gris */
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #1565C0; /* Azul principal para los botones no seleccionados */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.paginacion-btn:hover {
+  background-color: #1565C0;
+  color: white;
+}
+
+.paginacion-btn.activo {
+  background-color: #1565C0; /* Azul para la página seleccionada */
+  color: white;
+  font-weight: bold;
+}
+
+.paginacion-btn:disabled {
+  background-color: #E0E0E0; /* Gris claro para botones deshabilitados */
+  color: #9E9E9E; /* Gris para texto deshabilitado */
+  cursor: not-allowed;
+}

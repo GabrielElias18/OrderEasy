@@ -82,6 +82,20 @@ function Inventario() {
   const productosPaginados = productosFiltrados.slice(indexPrimero, indexUltimo);
   const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
 
+  const mostrarRangoPaginas = (paginaActual, totalPaginas, paginasVisibles = 5) => {
+    const rangoInicio = Math.max(1, paginaActual - Math.floor(paginasVisibles / 2));
+    const rangoFin = Math.min(totalPaginas, rangoInicio + paginasVisibles - 1);
+
+    const paginas = [];
+    for (let i = rangoInicio; i <= rangoFin; i++) {
+      paginas.push(i);
+    }
+
+    return paginas;
+  };
+
+  const paginasAMostrar = mostrarRangoPaginas(currentPage, totalPaginas);
+
   const cambiarPagina = (nuevaPagina) => {
     if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
       setCurrentPage(nuevaPagina);
@@ -200,15 +214,17 @@ function Inventario() {
           >
             Anterior
           </button>
-          {[...Array(totalPaginas)].map((_, i) => (
+
+          {paginasAMostrar.map((pagina) => (
             <button
-              key={i}
-              className={`paginacion-btn ${currentPage === i + 1 ? 'activo' : ''}`}
-              onClick={() => cambiarPagina(i + 1)}
+              key={pagina}
+              className={`paginacion-btn ${currentPage === pagina ? 'activo' : ''}`}
+              onClick={() => cambiarPagina(pagina)}
             >
-              {i + 1}
+              {pagina}
             </button>
           ))}
+
           <button 
             className="paginacion-btn"
             onClick={() => cambiarPagina(currentPage + 1)}
