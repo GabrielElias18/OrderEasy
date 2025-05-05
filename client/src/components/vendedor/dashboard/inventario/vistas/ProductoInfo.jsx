@@ -126,7 +126,7 @@ function ProductoInfo({ id, onClose }) {
       <div className="modal-content">
         <h2>{isEditing ? "Editar Producto" : "Detalles del Producto"}</h2>
         <button className="detalle-cerrar" onClick={onClose}>X</button>
-
+  
         {isEditing ? (
           <EditarProductoForm 
             producto={producto} 
@@ -134,7 +134,7 @@ function ProductoInfo({ id, onClose }) {
             onUpdate={handleUpdate} 
           />
         ) : (
-          <>
+          <div className="modal-scroll"> {/* <- Aquí se aplica el scroll */}
             <div className="detalle-imagen-container">
               {producto.imagenes?.length > 0 ? (
                 <img
@@ -147,7 +147,7 @@ function ProductoInfo({ id, onClose }) {
                 <img src="/images/default-product.png" alt="Sin imagen" className="detalle-imagen" />
               )}
             </div>
-
+  
             <div className="detalle-info">
               <h3 className="detalle-titulo">{producto.nombre}</h3>
               <p><strong>Descripción:</strong> {producto.descripcion}</p>
@@ -156,12 +156,12 @@ function ProductoInfo({ id, onClose }) {
               <p><strong>Precio de Venta:</strong> ${producto.precioVenta}</p>
               <p><strong>Categoría:</strong> {producto.categoriaNombre || "Sin categoría"}</p>
             </div>
-
+  
             <div className="detalle-acciones">
               <button className="detalle-editar-btn" onClick={() => setIsEditing(true)}>Editar</button>
               <button className="detalle-eliminar-btn" onClick={handleDelete}>Eliminar</button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

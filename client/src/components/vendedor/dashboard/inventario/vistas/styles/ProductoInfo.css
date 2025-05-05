@@ -25,7 +25,12 @@
   transform: scale(0.9);
   animation: modalEnter 0.3s ease-in-out forwards;
   max-height: 90vh;
+}
+
+.modal-scroll {
+  max-height: 70vh; /* Puedes ajustar según necesidad */
   overflow-y: auto;
+  padding-right: 8px; /* Para evitar que el scrollbar tape contenido */
 }
 
 /* Animations */

@@ -5,7 +5,7 @@ import VisualizarProductos from './vistas/VisualizarProductos';
 import CrearCategoriaForm from './vistas/CrearCategoriaForm';
 import CrearProductoForm from './vistas/CrearProductoForm';
 import GestionarCategoriaForm from './vistas/GestionarCategoriaForm';
-import ProductoInfo from './vistas/ProductoInfo'; // Asegúrate de importar el componente ProductoInfo
+import ProductoInfo from './vistas/ProductoInfo';
 import { getCategoriesByUser } from '../../../../services/categoryServices';
 import { getAllProducts } from '../../../../services/productServices';
 import './Inventario.css';
@@ -16,9 +16,12 @@ function Inventario() {
   const [isGestionarCategoriaVisible, setGestionarCategoriaVisible] = useState(false);
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
-  const [selectedCategoriaId, setSelectedCategoriaId] = useState(''); // Cambiado a ID
+  const [selectedCategoriaId, setSelectedCategoriaId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const productosPorPagina = 10;
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -37,6 +40,10 @@ function Inventario() {
   useEffect(() => {
     fetchProductos();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategoriaId]);
 
   const fetchProductos = async () => {
     try {
@@ -59,7 +66,6 @@ function Inventario() {
   };
 
   const productosFiltrados = productos.filter((producto) => {
-    // Filtrar por categoriaid en lugar de categoriaNombre
     const coincideCategoria = selectedCategoriaId
       ? String(producto.categoriaid) === String(selectedCategoriaId)
       : true;
@@ -71,22 +77,31 @@ function Inventario() {
     return coincideCategoria && coincideNombre;
   });
 
+  const indexUltimo = currentPage * productosPorPagina;
+  const indexPrimero = indexUltimo - productosPorPagina;
+  const productosPaginados = productosFiltrados.slice(indexPrimero, indexUltimo);
+  const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
+
+  const cambiarPagina = (nuevaPagina) => {
+    if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
+      setCurrentPage(nuevaPagina);
+    }
+  };
+
   const handleUpdateProduct = async (updatedProduct) => {
     try {
-      // Actualizar la lista de productos
       setProductos((prevProductos) =>
         prevProductos.map((producto) =>
           producto.productoid === updatedProduct.productoid ? updatedProduct : producto
         )
       );
-      
+
       await Swal.fire({
         icon: 'success',
         title: '¡Producto actualizado!',
         text: 'El producto se ha actualizado correctamente.',
       });
-      
-      // Recargar los productos para asegurarse de que todo esté actualizado
+
       fetchProductos();
     } catch (error) {
       await Swal.fire({
@@ -135,7 +150,7 @@ function Inventario() {
             <span>Agregar Categoría</span>
           </button>
         </div>
-        
+
         <div className="inventario-filters-right">
           <button 
             className="inventario-btn inventario-btn-secondary"
@@ -158,7 +173,7 @@ function Inventario() {
           </select>
         </div>
       </div>
-      
+
       <div className="inventario-search-sticky">
         <input
           type="text"
@@ -168,43 +183,71 @@ function Inventario() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      
+
       <div className="inventario-products">
         <VisualizarProductos
-          productos={productosFiltrados}
+          productos={productosPaginados}
           onVerDetalles={setProductoSeleccionado}
         />
       </div>
-      
+
+      {totalPaginas > 1 && (
+        <div className="paginacion">
+          <button 
+            className="paginacion-btn"
+            onClick={() => cambiarPagina(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Anterior
+          </button>
+          {[...Array(totalPaginas)].map((_, i) => (
+            <button
+              key={i}
+              className={`paginacion-btn ${currentPage === i + 1 ? 'activo' : ''}`}
+              onClick={() => cambiarPagina(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button 
+            className="paginacion-btn"
+            onClick={() => cambiarPagina(currentPage + 1)}
+            disabled={currentPage === totalPaginas}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
+
       {productoSeleccionado && (
         <ProductoInfo
           id={productoSeleccionado.productoid}
           onClose={() => {
             setProductoSeleccionado(null);
-            fetchProductos(); // Recargar productos al cerrar detalles
+            fetchProductos();
           }}
         />
       )}
-      
+
       <CrearCategoriaForm
         isVisible={isCrearCategoriaVisible}
         onClose={() => {
           setCrearCategoriaVisible(false);
-          fetchProductos(); // Recargar productos al cerrar formulario
+          fetchProductos();
         }}
       />
       <CrearProductoForm
         isVisible={isCrearProductoVisible}
         onClose={() => {
           setCrearProductoVisible(false);
-          fetchProductos(); // Recargar productos al cerrar formulario
+          fetchProductos();
         }}
       />
       <GestionarCategoriaForm
         isVisible={isGestionarCategoriaVisible}
         onClose={() => {
           setGestionarCategoriaVisible(false);
-          fetchProductos(); // Recargar productos al cerrar formulario
+          fetchProductos();
         }}
       />
     </div>

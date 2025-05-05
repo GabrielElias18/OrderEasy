@@ -117,7 +117,6 @@ function EditarProductoForm({ producto, onClose, onUpdate }) {
     <div className="overlay">
       <div className="popup">
         <h2>Editar Producto</h2>
-        <button className="cerrar" onClick={onClose}>X</button>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="form-group">
             <label>Nombre:</label>
