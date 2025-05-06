@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   Lightbulb,
+  ShoppingCart,
   X
 } from 'lucide-react';
 import Swal from 'sweetalert2';
@@ -92,7 +93,7 @@ function Sidebar() {
               className={`menu-item ${location.pathname.includes('productos') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}
             >
-              <Package className="menu-icon" />
+              <ShoppingCart className="menu-icon" />
               <span>Productos</span>
             </Link>
 
