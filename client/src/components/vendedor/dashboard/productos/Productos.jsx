@@ -133,7 +133,6 @@ const Productos = () => {
   return (
     <div className="tabla-container">
       <h3>Productos</h3>
-
       <div className="filters-container">
         <input
           type="text"
@@ -147,6 +146,7 @@ const Productos = () => {
         />
         <label htmlFor="selectPaginas">Páginas a exportar:</label>
         <select
+          className="select-style"
           id="selectPaginas"
           value={paginasAExportar}
           onChange={(e) => setPaginasAExportar(Number(e.target.value))}

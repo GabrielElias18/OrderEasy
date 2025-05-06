@@ -14,14 +14,57 @@
 /* Filtros */
 .filters-container {
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem; /* Añadimos espacio entre los filtros */
+  flex-wrap: wrap; /* Permite que los elementos se acomoden si no caben en una fila */
 }
 
 .filter-input {
   padding: 0.5rem;
-  width: 100%;
-  max-width: 400px;
+  width: 200px; /* Tamaño fijo */
+  max-width: 100%; /* Asegura que no se desborde */
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+/* Estilo para el select */
+.select-style {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 200px; /* Ajusta el ancho del select */
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.select-style:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Estilo para el botón */
+.btn-exportar {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.btn-exportar:hover {
+  background-color: #0056b3;
+}
+
+.btn-exportar:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 /* Tabla */
