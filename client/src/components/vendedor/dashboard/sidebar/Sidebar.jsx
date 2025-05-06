@@ -88,6 +88,15 @@ function Sidebar() {
             </Link>
 
             <Link
+              to="productos"
+              className={`menu-item ${location.pathname.includes('productos') ? 'active' : ''}`}
+              onClick={() => setIsOpen(false)}
+            >
+              <Package className="menu-icon" />
+              <span>Productos</span>
+            </Link>
+
+            <Link
               to="balance"
               className={`menu-item ${location.pathname.includes('balance') ? 'active' : ''}`}
               onClick={() => setIsOpen(false)}

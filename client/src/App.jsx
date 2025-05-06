@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/vendedor/dashboard/Dashboard';
 import Inventario from './components/vendedor/dashboard/inventario/Inventario';
+import Productos from './components/vendedor/dashboard/productos/Productos';
 import Balance from './components/vendedor/dashboard/balance/Balance';
 import Estadisticas from './components/vendedor/dashboard/estadisticas/Estadisticas';
 import Prediccion from './components/vendedor/dashboard/prediccion/Prediccion';
@@ -36,6 +37,7 @@ function App() {
         >
           <Route path="inicio" element={<Inicio />} />
           <Route path="inventario" element={<Inventario />} />
+          <Route path="productos" element={<Productos />} />
           <Route path="balance" element={<Balance />} />
           <Route path="estadisticas" element={<Estadisticas />} />
           <Route path="prediccion" element={<Prediccion />} />
