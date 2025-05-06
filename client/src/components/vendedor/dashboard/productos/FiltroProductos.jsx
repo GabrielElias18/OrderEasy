@@ -53,7 +53,12 @@ const FiltroProductos = ({ productosFiltrados, setProductos, orden, setOrden, de
           ? demandaA.localeCompare(demandaB)
           : demandaB.localeCompare(demandaA);
       }
-      return 0;
+      if (columna === 'historico') {  // Ordenar por Histórico
+        const historicoA = a.historico;  // Ajusta si tienes otro campo
+        const historicoB = b.historico;  // Ajusta si tienes otro campo
+        return nuevoOrden === 'asc' ? historicoA - historicoB : historicoB - historicoA;
+      }
+
     });
 
     setProductos(productosOrdenados);
@@ -101,7 +106,9 @@ const FiltroProductos = ({ productosFiltrados, setProductos, orden, setOrden, de
         <th onClick={() => handleOrdenar('precioVenta')} style={{ cursor: 'pointer' }}>
           Precio de Venta {orden.precioVenta === 'asc' ? '↑' : orden.precioVenta === 'desc' ? '↓' : ''}
         </th>
-        <th>Histórico</th>
+        <th onClick={() => handleOrdenar('historico')} style={{ cursor: 'pointer' }}>
+          Histórico {orden.historico === 'asc' ? '↑' : orden.historico === 'desc' ? '↓' : ''}
+        </th>
         <th onClick={() => handleOrdenar('diasMercado')} style={{ cursor: 'pointer' }}>
           Tiempo en Mercado {orden.diasMercado === 'asc' ? '↑' : orden.diasMercado === 'desc' ? '↓' : ''}
         </th>

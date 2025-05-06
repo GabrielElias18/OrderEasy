@@ -3,12 +3,15 @@ import { getAllProducts } from '../../../../services/productServices';
 import { getVentas } from '../../../../services/ventaService';
 import { predecirDemanda } from '../../../../services/prediccionService';
 import FiltroProductos from './FiltroProductos';
+import { exportarProductosPorPaginas } from './exportarExcel';
+import './Productos.css';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [paginaActual, setPaginaActual] = useState(1);
   const productosPorPagina = 20;
+  const [paginasAExportar, setPaginasAExportar] = useState(1);
 
   const [orden, setOrden] = useState({
     fecha: 'none',
@@ -19,9 +22,9 @@ const Productos = () => {
     diasMercado: 'none',
     categoriaNombre: 'none',
     demanda: 'none',
+    historico: 'none', // Añadido para poder ordenar por histórico
   });
 
-  const [historicoVentas, setHistoricoVentas] = useState({});
   const [demandaPorProducto, setDemandaPorProducto] = useState({});
 
   useEffect(() => {
@@ -34,35 +37,41 @@ const Productos = () => {
 
       try {
         const productosData = await getAllProducts(token);
-        setProductos(productosData || []);
-
         const ventas = await getVentas(token);
+
         const ventasPorProducto = productosData.reduce((acc, producto) => {
           const ventasFiltradas = ventas.filter(
-            (venta) => venta.productoNombre.toLowerCase() === producto.nombre.toLowerCase()
+            (venta) =>
+              venta.productoNombre?.toLowerCase() === producto.nombre?.toLowerCase()
           );
           const totalVentas = ventasFiltradas.reduce((acc, venta) => acc + venta.cantidad, 0);
           acc[producto.productoid] = totalVentas;
           return acc;
         }, {});
 
-        setHistoricoVentas(ventasPorProducto);
+        const productosConHistorico = productosData.map((producto) => ({
+          ...producto,
+          historico: ventasPorProducto[producto.productoid] || 0,
+        }));
+
+        setProductos(productosConHistorico);
 
         const predicciones = await Promise.all(
-          productosData.map(async (producto) => {
+          productosConHistorico.map(async (producto) => {
             const datos = {
               precioVenta: producto.precioVenta,
               precioCompra: producto.precioCompra,
               cantidadDisponible: producto.cantidadDisponible,
-              historico_ventas: ventasPorProducto[producto.productoid] || 0,
+              historico_ventas: producto.historico,
               tiempo_en_mercado: calcularDiasEnMercado(producto.createdat),
-              categoria: producto.categoriaNombre
+              categoria: producto.categoriaNombre,
             };
 
             try {
               const prediccion = await predecirDemanda(datos);
-
-              const [categoriaMayor] = Object.entries(prediccion).reduce((a, b) => (a[1] > b[1] ? a : b));
+              const [categoriaMayor] = Object.entries(prediccion).reduce((a, b) =>
+                a[1] > b[1] ? a : b
+              );
               return { id: producto.productoid, categoria: categoriaMayor };
             } catch (e) {
               console.error(`Error al predecir demanda del producto ${producto.nombre}:`, e);
@@ -90,7 +99,6 @@ const Productos = () => {
     const dia = String(f.getDate()).padStart(2, '0');
     const mes = String(f.getMonth() + 1).padStart(2, '0');
     const año = f.getFullYear();
-
     return `${dia}/${mes}/${año}`;
   };
 
@@ -102,16 +110,14 @@ const Productos = () => {
     const hoy = new Date();
     const inicio = new Date(fechaCreacion.toDateString());
     const fin = new Date(hoy.toDateString());
-
     const diferenciaMs = fin - inicio;
     const dias = Math.floor(diferenciaMs / (1000 * 60 * 60 * 24));
     return dias >= 0 ? dias : 0;
   };
 
-  // Agrega esta función dentro del componente
   const capitalizarDemanda = (demanda) => {
     if (!demanda) return '';
-    return demanda.charAt(0).toUpperCase() + demanda.slice(1); // Primera letra en mayúsculas
+    return demanda.charAt(0).toUpperCase() + demanda.slice(1);
   };
 
   const productosFiltrados = productos.filter((producto) =>
@@ -139,6 +145,30 @@ const Productos = () => {
           }}
           className="filter-input"
         />
+        <label htmlFor="selectPaginas">Páginas a exportar:</label>
+        <select
+          id="selectPaginas"
+          value={paginasAExportar}
+          onChange={(e) => setPaginasAExportar(Number(e.target.value))}
+        >
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <option key={i + 1} value={i + 1}>
+              {i + 1}
+            </option>
+          ))}
+        </select>
+
+        <button
+          onClick={() => {
+            const productosParaExportar = productosFiltrados.slice(0, paginasAExportar * productosPorPagina);
+            console.log('Exportando productos:', productosParaExportar);
+            exportarProductosPorPaginas(productosParaExportar, demandaPorProducto);
+          }}
+          className="btn-exportar"
+        >
+          Exportar Excel
+        </button>
+
       </div>
 
       <table className="tabla-productos">
@@ -160,7 +190,7 @@ const Productos = () => {
                 <td>{producto.cantidadDisponible}</td>
                 <td>${Number(producto.precioCompra).toLocaleString('es-CO')}</td>
                 <td>${Number(producto.precioVenta).toLocaleString('es-CO')}</td>
-                <td>{historicoVentas[producto.productoid] || 0}</td>
+                <td>{producto.historico}</td>
                 <td>{calcularDiasEnMercado(producto.createdat)} días</td>
                 <td>{capitalizarDemanda(demandaPorProducto[producto.productoid] || 'Cargando...')}</td>
               </tr>
