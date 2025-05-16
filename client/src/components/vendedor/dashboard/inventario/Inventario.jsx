@@ -99,6 +99,7 @@ function Inventario() {
   const cambiarPagina = (nuevaPagina) => {
     if (nuevaPagina >= 1 && nuevaPagina <= totalPaginas) {
       setCurrentPage(nuevaPagina);
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // <== DESPLAZAR ARRIBA
     }
   };
 
@@ -198,7 +199,7 @@ function Inventario() {
         />
       </div>
 
-      <div className="inventario-products">
+      <div className="inventario-products inventario-grid-3">
         <VisualizarProductos
           productos={productosPaginados}
           onVerDetalles={setProductoSeleccionado}
