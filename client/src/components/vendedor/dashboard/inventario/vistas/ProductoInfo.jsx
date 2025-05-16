@@ -152,8 +152,8 @@ function ProductoInfo({ id, onClose }) {
               <h3 className="detalle-titulo">{producto.nombre}</h3>
               <p><strong>Descripción:</strong> {producto.descripcion}</p>
               <p><strong>Cantidad Disponible:</strong> {producto.cantidadDisponible}</p>
-              <p><strong>Precio de Compra:</strong> ${producto.precioCompra}</p>
-              <p><strong>Precio de Venta:</strong> ${producto.precioVenta}</p>
+              <p><strong>Precio de Compra:</strong> {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(producto.precioCompra)}</p>
+              <p><strong>Precio de Venta:</strong> {new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(producto.precioVenta)}</p>
               <p><strong>Categoría:</strong> {producto.categoriaNombre || "Sin categoría"}</p>
             </div>
   

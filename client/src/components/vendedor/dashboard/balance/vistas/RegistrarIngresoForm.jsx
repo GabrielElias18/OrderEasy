@@ -65,6 +65,14 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
       setProductoSeleccionado(productoEncontrado || null);
     }
   }, [productoIdSeleccionado, categoriasConProductos]);
+
+  const formatoCOP = new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+  
   
 
   const onSubmit = async (data) => {
@@ -98,16 +106,25 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
 
       const total = productoSeleccionado.precioVenta * data.cantidad;
 
+      // Formatear precios sin decimales
+      const formatoCOP = new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+
       await Swal.fire({
         icon: "success",
         title: "¡Venta Exitosa!",
         html: `
           <div class="venta-resumen">
             <p><strong>${data.cantidad}</strong> unidades de <strong>${productoSeleccionado.nombre}</strong></p>
-            <p>Precio de venta: $${productoSeleccionado.precioVenta}</p>
-            <p class="total">Total: $${total}</p>
+            <p>Precio de venta: ${formatoCOP.format(productoSeleccionado.precioVenta)}</p>
+            <p class="total">Total: ${formatoCOP.format(total)}</p>
           </div>
         `,
+
         showConfirmButton: true,
         confirmButtonText: "Aceptar",
         confirmButtonColor: "#3085d6",
@@ -178,7 +195,7 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
               <h3>Información del Producto</h3>
               <p>
                 <span>Precio de venta:</span>
-                <strong>${productoSeleccionado.precioVenta}</strong>
+                <strong>{formatoCOP.format(productoSeleccionado.precioVenta)}</strong>
               </p>
               <p>
                 <span>Stock disponible:</span>
@@ -186,6 +203,7 @@ const RegistrarIngresoForm = ({ cerrarFormulario }) => {
               </p>
             </div>
           )}
+
 
           <div className="form-group">
             <label className="label">Cantidad:</label>

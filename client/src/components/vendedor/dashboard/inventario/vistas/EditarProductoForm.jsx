@@ -132,12 +132,44 @@ function EditarProductoForm({ producto, onClose, onUpdate }) {
           </div>
           <div className="form-group">
             <label>Precio de Compra:</label>
-            <input type="number" value={precioCompra} onChange={(e) => setPrecioCompra(e.target.value)} required />
+            <input
+              type="number"
+              value={precioCompra}
+              onChange={(e) => setPrecioCompra(parseInt(e.target.value) || 0)}
+              required
+            />
+            <small>
+              {precioCompra
+                ? `Vista previa: ${new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }).format(precioCompra)}`
+                : ''}
+            </small>
           </div>
+
           <div className="form-group">
             <label>Precio de Venta:</label>
-            <input type="number" value={precioVenta} onChange={(e) => setPrecioVenta(e.target.value)} required />
+            <input
+              type="number"
+              value={precioVenta}
+              onChange={(e) => setPrecioVenta(parseInt(e.target.value) || 0)}
+              required
+            />
+            <small>
+              {precioVenta
+                ? `Vista previa: ${new Intl.NumberFormat('es-CO', {
+                    style: 'currency',
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }).format(precioVenta)}`
+                : ''}
+            </small>
           </div>
+
           <div className="form-group">
             <label>Seleccionar Categoría:</label>
             <select value={categoriaId} onChange={(e) => setCategoriaId(e.target.value)} required>

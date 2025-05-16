@@ -19,25 +19,23 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
         const token = localStorage.getItem("token");
         const categoriasData = await getCategoriesByUser(token);
         const productosData = await getAllProducts(token);
-  
+
         if (!Array.isArray(categoriasData) || !Array.isArray(productosData)) {
           console.error("Los datos de la API no son un array");
           return;
         }
-  
-        // Crear un mapa indexado por categoriaid
+
         const categoriasMap = categoriasData.reduce((acc, categoria) => {
           acc[categoria.categoriaid] = { ...categoria, productos: [] };
           return acc;
         }, {});
-  
-        // Asignar productos a su categoría correspondiente usando categoriaid
+
         productosData.forEach((producto) => {
           if (categoriasMap[producto.categoriaid]) {
             categoriasMap[producto.categoriaid].productos.push(producto);
           }
         });
-  
+
         setCategoriasConProductos(Object.values(categoriasMap));
       } catch (error) {
         console.error("Error al cargar datos:", error);
@@ -49,7 +47,7 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
         });
       }
     };
-  
+
     cargarDatos();
   }, []);
 
@@ -60,7 +58,7 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
       const productoEncontrado = categoriasConProductos
         .flatMap((cat) => cat.productos)
         .find((prod) => String(prod.productoid) === String(productoIdSeleccionado));
-  
+
       setProductoSeleccionado(productoEncontrado || null);
     }
   }, [productoIdSeleccionado, categoriasConProductos]);
@@ -78,13 +76,13 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
         productoId: productoSeleccionado.productoid,
         productoNombre: productoSeleccionado.nombre,
         cantidad: Number(data.cantidad),
-        precioCompra: productoSeleccionado.precioCompra,
+        precioCompra: Number(productoSeleccionado.precioCompra),
         descripcion: data.descripcion || "",
       };
 
       await createEgreso(egresoData, token);
 
-      const total = data.cantidad * productoSeleccionado.precioCompra;
+      const total = Number(data.cantidad) * Number(productoSeleccionado.precioCompra);
 
       await Swal.fire({
         icon: "success",
@@ -92,8 +90,8 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
         html: `
           <div class="egreso-resumen">
             <p><strong>${data.cantidad}</strong> unidades de <strong>${productoSeleccionado.nombre}</strong></p>
-            <p>Precio de compra: $${productoSeleccionado.precioCompra}</p>
-            <p class="total">Total: $${total}</p>
+            <p>Precio de compra: $${Number(productoSeleccionado.precioCompra).toLocaleString("es-CO", { maximumFractionDigits: 0 })}</p>
+            <p class="total">Total: $${total.toLocaleString("es-CO", { maximumFractionDigits: 0 })}</p>
           </div>
         `,
         confirmButtonColor: "#3085d6",
@@ -108,7 +106,6 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
       cerrarFormulario();
     } catch (error) {
       console.error("Error en el egreso:", error);
-
       await Swal.fire({
         icon: "error",
         title: "Error en el Egreso",
@@ -165,7 +162,7 @@ const RegistrarEgresoForm = ({ cerrarFormulario }) => {
               <h3>Información del Producto</h3>
               <p>
                 <span>Precio de compra:</span>
-                <strong>${productoSeleccionado.precioCompra}</strong>
+                <strong>${Number(productoSeleccionado.precioCompra).toLocaleString("es-CO", { maximumFractionDigits: 0 })}</strong>
               </p>
               <p>
                 <span>Stock actual:</span>
