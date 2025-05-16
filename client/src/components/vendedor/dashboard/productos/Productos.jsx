@@ -1,3 +1,4 @@
+// ...otros imports
 import React, { useState, useEffect } from 'react';
 import { getAllProducts } from '../../../../services/productServices';
 import { getVentas } from '../../../../services/ventaService';
@@ -12,6 +13,7 @@ const Productos = () => {
   const [paginaActual, setPaginaActual] = useState(1);
   const productosPorPagina = 20;
   const [paginasAExportar, setPaginasAExportar] = useState(1);
+  const [categoriaFiltro, setCategoriaFiltro] = useState('Todas');
 
   const [orden, setOrden] = useState({
     fecha: 'none',
@@ -22,7 +24,7 @@ const Productos = () => {
     diasMercado: 'none',
     categoriaNombre: 'none',
     demanda: 'none',
-    historico: 'none', // Añadido para poder ordenar por histórico
+    historico: 'none',
   });
 
   const [demandaPorProducto, setDemandaPorProducto] = useState({});
@@ -120,9 +122,13 @@ const Productos = () => {
     return demanda.charAt(0).toUpperCase() + demanda.slice(1);
   };
 
-  const productosFiltrados = productos.filter((producto) =>
-    producto.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const categoriasUnicas = ['Todas', ...new Set(productos.map(p => p.categoriaNombre).filter(Boolean))];
+
+  const productosFiltrados = productos.filter((producto) => {
+    const coincideNombre = producto.nombre?.toLowerCase().includes(searchTerm.toLowerCase());
+    const coincideCategoria = categoriaFiltro === 'Todas' || producto.categoriaNombre === categoriaFiltro;
+    return coincideNombre && coincideCategoria;
+  });
 
   const totalPaginas = Math.ceil(productosFiltrados.length / productosPorPagina);
   const productosPaginados = productosFiltrados.slice(
@@ -134,42 +140,61 @@ const Productos = () => {
     <div className="tabla-container">
       <h3>Productos</h3>
       <div className="filters-container">
-        <input
-          type="text"
-          placeholder="Buscar por nombre..."
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            setPaginaActual(1);
-          }}
-          className="filter-input"
-        />
-        <label htmlFor="selectPaginas">Páginas a exportar:</label>
-        <select
-          className="select-style"
-          id="selectPaginas"
-          value={paginasAExportar}
-          onChange={(e) => setPaginasAExportar(Number(e.target.value))}
-        >
-          {Array.from({ length: totalPaginas }, (_, i) => (
-            <option key={i + 1} value={i + 1}>
-              {i + 1}
-            </option>
-          ))}
-        </select>
+        <div>
+          <label htmlFor="buscar">Buscar:</label>
+          <input
+            id="buscar"
+            type="text"
+            placeholder="por nombre..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPaginaActual(1);
+            }}
+            className="filter-input"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="selectCategoria">Categorías:</label>
+          <select
+            className="select-style"
+            id="selectCategoria"
+            value={categoriaFiltro}
+            onChange={(e) => setCategoriaFiltro(e.target.value)}
+          >
+            {categoriasUnicas.map((cat, idx) => (
+              <option key={idx} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="selectPaginas">Páginas a exportar:</label>
+          <select
+            className="select-style"
+            id="selectPaginas"
+            value={paginasAExportar}
+            onChange={(e) => setPaginasAExportar(Number(e.target.value))}
+          >
+            {Array.from({ length: totalPaginas }, (_, i) => (
+              <option key={i + 1} value={i + 1}>{i + 1}</option>
+            ))}
+          </select>
+        </div>
 
         <button
           onClick={() => {
             const productosParaExportar = productosFiltrados.slice(0, paginasAExportar * productosPorPagina);
-            console.log('Exportando productos:', productosParaExportar);
             exportarProductosPorPaginas(productosParaExportar, demandaPorProducto);
           }}
           className="btn-exportar"
         >
           Exportar Excel
         </button>
-
       </div>
+
+
 
       <table className="tabla-productos">
         <FiltroProductos

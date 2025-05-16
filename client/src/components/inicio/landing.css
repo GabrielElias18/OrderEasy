@@ -38,23 +38,6 @@ body {
   padding: 0 2rem;
 }
 
-/* Botón outline */
-.btn-outline {
-  background: transparent;
-  color: #1565C0;
-  border: 1px solid #1565C0;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600; 
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-outline:hover {
-  background: #1565C0;
-  color: #ffffff;
-}
-
 /* Icono del logo */
 .logo-icon {
   width: 1.5rem;
@@ -127,7 +110,7 @@ body {
 
 .btn-outline:hover {
   background: #1565C0;
-  color: #ffffff;
+
 }
 
 /* Hero Section */
@@ -375,15 +358,6 @@ body {
   justify-content: center;
 }
 
-.cta .btn-outline {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.cta .btn-outline:hover {
-  border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.1);
-}
 
 /* Footer */
 .footer {

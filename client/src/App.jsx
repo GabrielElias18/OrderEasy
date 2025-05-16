@@ -35,6 +35,8 @@ function App() {
             </ProtectedRoute>
           }
         >
+
+          
           <Route path="inicio" element={<Inicio />} />
           <Route path="inventario" element={<Inventario />} />
           <Route path="productos" element={<Productos />} />
